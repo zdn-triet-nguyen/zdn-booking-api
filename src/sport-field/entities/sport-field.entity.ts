@@ -11,10 +11,10 @@ import {
 } from 'typeorm';
 import { SportFieldType } from './sport-field-type.entity';
 import { SportFieldImage } from './sport-field-image.entity';
-import { Field } from 'src/field/entities/field.entity';
-import { Location } from 'src/location/entities/location.entity';
-import { CURRENT_TIMESTAMP } from 'src/constants/constants';
-import { User } from 'src/user/entities/user.entity';
+import { Field } from '../../field/entities/field.entity';
+import { Location } from '../../location/entities/location.entity';
+import { CURRENT_TIMESTAMP } from '../../constants/constants';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class SportField {

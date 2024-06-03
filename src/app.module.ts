@@ -12,6 +12,8 @@ import { BookingModule } from './booking/booking.module';
 import { LocationModule } from './location/location.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeorm from './config/typeorm.config';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
@@ -25,6 +27,10 @@ import typeorm from './config/typeorm.config';
       useFactory: async (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
+    DatabaseModule,
     UserModule,
     AccountModule,
     SportFieldModule,

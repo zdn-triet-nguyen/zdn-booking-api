@@ -20,14 +20,19 @@ enum UserRole {
 import { Location } from 'src/location/entities/location.entity';
 import { Booking } from 'src/booking/entities/booking.entity';
 import { Field } from 'src/field/entities/field.entity';
+import { AutoMap } from '@automapper/classes';
 
 @Entity()
 export class User {
+  @AutoMap()
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @AutoMap()
   @Column({ type: 'character varying', length: 52, nullable: false })
   name: string;
 
+  @AutoMap()
   @Column({
     type: 'character varying',
     length: 320,
@@ -36,6 +41,7 @@ export class User {
   })
   email: string;
 
+  @AutoMap()
   @Column({
     type: 'character varying',
     length: 10,
@@ -43,11 +49,16 @@ export class User {
     nullable: false,
   })
   phone: number;
+
+  @AutoMap()
   @Column({ type: 'enum', enum: UserRole, nullable: false })
   role: UserRole;
+
+  @AutoMap()
   @Column({ type: 'text' })
   image_url: string;
 
+  @AutoMap()
   @Column({
     type: 'character varying',
     length: 64,

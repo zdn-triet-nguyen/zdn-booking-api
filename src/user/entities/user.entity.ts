@@ -1,6 +1,6 @@
-import { Account } from 'src/account/entities/account.entity';
-import { SportFieldImage } from 'src/sport-field/entities/sport-field-image.entity';
-import { SportField } from 'src/sport-field/entities/sport-field.entity';
+import { Account } from '../../../src/account/entities/account.entity';
+import { SportFieldImage } from '../../../src/sport-field/entities/sport-field-image.entity';
+import { SportField } from '../../../src/sport-field/entities/sport-field.entity';
 import {
   Entity,
   Column,
@@ -17,9 +17,9 @@ enum UserRole {
   owner = 'owner',
 }
 
-import { Location } from 'src/location/entities/location.entity';
-import { Booking } from 'src/booking/entities/booking.entity';
-import { Field } from 'src/field/entities/field.entity';
+import { Location } from '../../../src/location/entities/location.entity';
+import { Booking } from '../../../src/booking/entities/booking.entity';
+import { Field } from '../../../src/field/entities/field.entity';
 
 @Entity()
 export class User {

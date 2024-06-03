@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { SportField } from './sport-field.entity';
-import { CURRENT_TIMESTAMP } from 'src/constants/constants';
-import { User } from 'src/user/entities/user.entity';
+import { CURRENT_TIMESTAMP } from '../../constants/constants';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class SportFieldImage {

@@ -6,10 +6,8 @@ import {
   JoinColumn,
   Timestamp,
 } from 'typeorm';
-import { Field } from 'src/field/entities/field.entity';
-import { User } from 'src/user/entities/user.entity';
-import { CURRENT_TIMESTAMP } from 'src/constants/constants';
-// import { User } from 'src/user/entities/user.entity';
+import { Field } from '../../../src/field/entities/field.entity';
+import { User } from '../../../src/user/entities/user.entity';
 
 export enum BookingStatus {
   disabled = 'disabled',

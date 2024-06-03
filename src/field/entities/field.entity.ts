@@ -7,9 +7,9 @@ import {
   OneToMany,
   Timestamp,
 } from 'typeorm';
-import { SportField } from 'src/sport-field/entities/sport-field.entity';
-import { User } from 'src/user/entities/user.entity';
-import { Booking } from 'src/booking/entities/booking.entity';
+import { SportField } from '../../../src/sport-field/entities/sport-field.entity';
+import { User } from '../../../src/user/entities/user.entity';
+import { Booking } from '../../../src/booking/entities/booking.entity';
 @Entity('field')
 export class Field {
   @PrimaryGeneratedColumn('uuid')

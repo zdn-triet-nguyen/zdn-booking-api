@@ -12,12 +12,10 @@ import {
 import { Province } from './province.entity';
 import { District } from './district.entity';
 import { Ward } from './ward.entity';
-import { SportField } from '../../../src/sport-field/entities/sport-field.entity';
-import { User } from '../../../src/user/entities/user.entity';
+import { SportField } from 'src/sport-field/entities/sport-field.entity';
+import { User } from 'src/user/entities/user.entity';
 
-@Entity(
-  {synchronize: true}
-)
+@Entity({ synchronize: true })
 export class Location {
   @PrimaryGeneratedColumn('uuid')
   id: string;

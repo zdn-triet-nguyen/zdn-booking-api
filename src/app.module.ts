@@ -1,12 +1,20 @@
+// import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
 import typeorm from './config/typeorm.config';
 import { DatabaseModule } from './database/database.module';
+
+import { HttpExceptionFilter } from './common/error/http-exception.filter';
+import { UpdateValuesMissingErrorFilter } from './common/error/exception-filter';
+
 import { UserModule } from './modules/user/user.module';
 import { AccountModule } from './modules/account/account.module';
 import { SportFieldModule } from './modules/sport-field/sport-field.module';
@@ -38,6 +46,20 @@ import { LocationModule } from './modules/location/location.module';
     LocationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: UpdateValuesMissingErrorFilter,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer.apply(UserMiddleware).forRoutes('*');
+  // }
+}

@@ -9,7 +9,7 @@ import { classes } from '@automapper/classes';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import typeorm from './config/typeorm.config';
+import typeorm from './configs/typeorm.config';
 import { DatabaseModule } from './database/database.module';
 
 import { HttpExceptionFilter } from './common/error/http-exception.filter';

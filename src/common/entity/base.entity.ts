@@ -36,6 +36,6 @@ export class BaseEntity {
   deletedAt: Date;
 
   @AutoMap()
-  @Column()
+  @Column({ name: 'deleted_by', type: 'timestamp', nullable: true })
   deletedBy: string;
 }

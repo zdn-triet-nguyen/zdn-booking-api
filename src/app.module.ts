@@ -10,7 +10,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import typeorm from './configs/typeorm.config';
-import { DatabaseModule } from './database/database.module';
 
 import { HttpExceptionFilter } from './common/error/http-exception.filter';
 import { UpdateValuesMissingErrorFilter } from './common/error/exception-filter';
@@ -38,7 +37,6 @@ import { MailModule } from './modules/mail/mail.module';
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
-    DatabaseModule,
     UserModule,
     AccountModule,
     SportFieldModule,

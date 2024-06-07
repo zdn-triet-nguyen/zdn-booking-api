@@ -21,6 +21,7 @@ import { SportFieldModule } from './modules/sport-field/sport-field.module';
 import { FieldModule } from './modules/field/field.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { LocationModule } from './modules/location/location.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { LocationModule } from './modules/location/location.module';
     FieldModule,
     BookingModule,
     LocationModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [

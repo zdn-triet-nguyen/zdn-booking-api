@@ -9,7 +9,9 @@ export const firebaseProvider = {
       type: configService.get<string>('FIRE_TYPE'),
       project_id: configService.get<string>('FIRE_PROJECT_ID'),
       private_key_id: configService.get<string>('FIRE_PRIVATE_KEY_ID'),
-      private_key: configService.get<string>('FIRE_PRIVATE_KEY'),
+      private_key: configService
+        .get<string>('FIRE_PRIVATE_KEY')
+        .replace(/\\n/gm, '\n'),
       client_email: configService.get<string>('FIRE_CLIENT_EMAIL'),
       client_id: configService.get<string>('FIRE_CLIENT_ID'),
       auth_uri: configService.get<string>('FIRE_AUTH_URI'),

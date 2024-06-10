@@ -33,6 +33,7 @@ export class BaseEntity {
   @ManyToOne(() => User, (user) => user.updatedEntities)
   @JoinColumn({
     name: 'updated_by',
+    nullable: true,
   })
   updatedBy: User;
 

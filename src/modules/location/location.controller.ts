@@ -17,7 +17,7 @@ export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
   @Post()
-  create(@Body() createLocationDto: CreateLocationDto) {
+  async create(@Body() createLocationDto: CreateLocationDto) {
     return this.locationService.create(createLocationDto);
   }
 
@@ -26,9 +26,34 @@ export class LocationController {
     return this.locationService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.locationService.findOne(+id);
+  @Get('provinces')
+  findAllProvince() {
+    return this.locationService.findAllProvince();
+  }
+
+  @Get('districts')
+  findAllDistrict() {
+    return this.locationService.findAllDistrict();
+  }
+
+  @Get('ward')
+  findAllWard() {
+    return this.locationService.findAllWard();
+  }
+
+  @Get('province/:id')
+  findByProvince(@Param('id') id: string) {
+    return this.locationService.findByProvince(id);
+  }
+
+  @Get('district/:id')
+  findByDistrict(@Param('id') id: string) {
+    return this.locationService.findByDistrict(id);
+  }
+
+  @Get('ward/:id')
+  findByWard(@Param('id') id: string) {
+    return this.locationService.findByWard(id);
   }
 
   @Patch(':id')
@@ -36,11 +61,16 @@ export class LocationController {
     @Param('id') id: string,
     @Body() updateLocationDto: UpdateLocationDto,
   ) {
-    return this.locationService.update(+id, updateLocationDto);
+    return this.locationService.update(id, updateLocationDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.locationService.remove(+id);
+    return this.locationService.remove(id);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.locationService.findOne(id);
   }
 }

@@ -30,7 +30,8 @@ export class BaseEntity {
   updatedAt: Date;
 
   @AutoMap()
-  @Column({
+  @ManyToOne(() => User, (user) => user.updatedEntities)
+  @JoinColumn({
     name: 'updated_by',
   })
   updatedBy: User;
@@ -40,6 +41,9 @@ export class BaseEntity {
   deletedAt: Date;
 
   @AutoMap()
-  @Column({ name: 'deleted_by', type: 'timestamp', nullable: true })
+  @ManyToOne(() => User, (user) => user.deletedEntities)
+  @JoinColumn({
+    name: 'deleted_by',
+  })
   deletedBy: User;
 }

@@ -58,4 +58,10 @@ export class User extends BaseEntity {
 
   @OneToMany(() => BaseEntity, (base) => base.createdBy)
   createdEntities: BaseEntity[];
+
+  @OneToMany(() => BaseEntity, (base) => base.updatedBy)
+  updatedEntities: BaseEntity[];
+
+  @OneToMany(() => BaseEntity, (base) => base.deletedBy)
+  deletedEntities: BaseEntity[];
 }

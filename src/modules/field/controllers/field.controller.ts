@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { FieldService } from './field.service';
-import { CreateFieldDto } from './dto/create-field.dto';
-import { UpdateFieldDto } from './dto/update-field.dto';
+import { FieldService } from './../services/field.service';
+import { CreateFieldDto } from '../dto/create-field.dto';
+import { UpdateFieldDto } from '../dto/update-field.dto';
 import { ApiTags } from '@nestjs/swagger';
 @ApiTags('field')
 @Controller('field')

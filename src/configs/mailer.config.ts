@@ -1,18 +1,18 @@
 import { MailerOptions } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { config as dotenvConfig } from 'dotenv';
 
-const dir = join(__dirname, '..', 'templates');
-console.log(join(dir, 'templates'));
+dotenvConfig({ path: '.env' });
 
 export const mailerConfig: MailerOptions = {
   transport: {
-    host: 'smtp-relay.brevo.com', // e.g., smtp.gmail.com
-    port: 587,
+    host: process.env.MAIL_HOST, // e.g., smtp.gmail.com
+    port: +process.env.MAIL_PORT, // e.g., 587
     secure: false, // true for 465, false for other ports
     auth: {
-      user: '7637f5001@smtp-brevo.com',
-      pass: 'aY8jBNLSvr5HqMCd',
+      user: process.env.MAIL_USER, // generated ethereal user
+      pass: process.env.MAIL_PASS, // generated ethereal password
     },
   },
   defaults: {

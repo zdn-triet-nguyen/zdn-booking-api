@@ -55,4 +55,7 @@ export class User extends BaseEntity {
   @AutoMap()
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+
+  @OneToMany(() => BaseEntity, (base) => base.createdBy)
+  createdEntities: BaseEntity[];
 }

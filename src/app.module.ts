@@ -21,12 +21,14 @@ import { FieldModule } from './modules/field/field.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { LocationModule } from './modules/location/location.module';
 import { MailModule } from './modules/mail/mail.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],
+      cache: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -44,6 +46,7 @@ import { MailModule } from './modules/mail/mail.module';
     BookingModule,
     LocationModule,
     MailModule,
+    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [

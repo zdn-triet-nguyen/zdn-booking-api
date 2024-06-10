@@ -20,9 +20,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
     "migration:run": "npm run typeorm migration:run -- -d ./src/configs/typeorm.config.ts",
-    "migration:generate": "cross-var npm run typeorm -- -d ./src/configs/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
-    "migration:create": "cross-var npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
-    "migration:revert": "npm run typeorm -- -d ./src/configs/typeorm.config.ts migration:revert"
+    "migration:generate": "npm run typeorm -- -d ./src/configs/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
+    "migration:create": "npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
+    "migration:revert": "npm run typeorm -- -d ./src/configs/typeorm.config.ts migration:revert",
+    "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed -n src/configs/typeorm.seeding.config.ts"
   },
   "dependencies": {
     "@automapper/classes": "^8.8.1",
@@ -41,14 +42,19 @@
     "axios": "^1.7.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+<<<<<<< Updated upstream
     "cross-var": "^1.1.0",
     "firebase-admin": "^12.1.1",
+=======
+    "faker": "^6.6.6",
+>>>>>>> Stashed changes
     "handlebars": "^4.7.8",
     "nodemailer": "^6.9.13",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "typeorm-seeding": "^1.6.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

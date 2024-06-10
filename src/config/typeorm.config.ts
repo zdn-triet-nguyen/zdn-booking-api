@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { config as dotenvConfig } from 'dotenv';
+import { TYPE_ORM_CONFIG } from 'src/constants/constants';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 dotenvConfig({ path: '.env' });
@@ -20,12 +21,8 @@ const config = {
       rejectUnauthorized: false,
     },
   },
-  migrations: [`${__dirname}/../../migrations/*{.ts,.js}`],
-  // cli: {
-  //   migrationsDir: 'src/migrations',
-  // },
-  // autoLoadEntities: true,
+  migrations: [`${__dirname}/../migrations/*{.ts,.js}`],
 };
 
-export default registerAs('typeorm', () => config);
+export default registerAs(TYPE_ORM_CONFIG, () => config);
 export const connectionSource = new DataSource(config as DataSourceOptions);

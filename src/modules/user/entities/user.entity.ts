@@ -34,7 +34,7 @@ export class User extends BaseEntity {
     unique: true,
     nullable: false,
   })
-  phone: number;
+  phone: string;
 
   @AutoMap()
   @Column({ type: 'enum', enum: UserRole, nullable: false })
@@ -55,4 +55,7 @@ export class User extends BaseEntity {
   @AutoMap()
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+
+  @OneToMany(() => BaseEntity, (base) => base.createdBy)
+  createdEntities: BaseEntity[];
 }

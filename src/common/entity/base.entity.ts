@@ -1,7 +1,10 @@
 import { AutoMap } from '@automapper/classes';
+import { User } from 'src/modules/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -16,10 +19,11 @@ export class BaseEntity {
   createdAt: Date;
 
   @AutoMap()
-  @Column({
+  @ManyToOne(() => User, (user) => user.createdEntities)
+  @JoinColumn({
     name: 'created_by',
   })
-  createdBy: string;
+  createdBy: User;
 
   @AutoMap()
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: true })
@@ -29,7 +33,7 @@ export class BaseEntity {
   @Column({
     name: 'updated_by',
   })
-  updatedBy: string;
+  updatedBy: User;
 
   @AutoMap()
   @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
@@ -37,5 +41,5 @@ export class BaseEntity {
 
   @AutoMap()
   @Column({ name: 'deleted_by', type: 'timestamp', nullable: true })
-  deletedBy: string;
+  deletedBy: User;
 }

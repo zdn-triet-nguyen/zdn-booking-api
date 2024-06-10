@@ -22,6 +22,8 @@ import { BookingModule } from './modules/booking/booking.module';
 import { LocationModule } from './modules/location/location.module';
 import { MailModule } from './modules/mail/mail.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { TYPE_ORM_CONFIG } from './constants/constants';
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) =>
-        configService.get('typeorm'),
+        configService.get(TYPE_ORM_CONFIG),
     }),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
@@ -47,6 +49,7 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
     LocationModule,
     MailModule,
     FirebaseModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

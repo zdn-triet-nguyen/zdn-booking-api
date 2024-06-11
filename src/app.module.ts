@@ -12,7 +12,8 @@ import { AppService } from './app.service';
 import typeorm from './configs/typeorm.config';
 
 import { HttpExceptionFilter } from './common/error/http-exception.filter';
-import { UpdateValuesMissingErrorFilter } from './common/error/exception-filter';
+import { UpdateValuesMissingErrorFilter } from './common/error/exception.filter';
+import { AllExceptionsFilter } from './common/error/all-exception.filter';
 
 import { UserModule } from './modules/user/user.module';
 import { AccountModule } from './modules/account/account.module';
@@ -61,6 +62,10 @@ import { TYPE_ORM_CONFIG } from './constants/constants';
     {
       provide: APP_FILTER,
       useClass: UpdateValuesMissingErrorFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
     },
   ],
 })

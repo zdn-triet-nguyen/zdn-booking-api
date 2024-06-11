@@ -25,7 +25,7 @@ export class AuthService {
       const response = await this.requestKeycloakToken(formData);
       return response.data;
     } catch (error) {
-      return new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
   }
 
@@ -35,7 +35,7 @@ export class AuthService {
         where: { phone: signInDto.phone },
       });
       if (!user) {
-        return new NotFoundException('User not found');
+        throw new NotFoundException('User not found');
       }
 
       signInDto.email = user.email;

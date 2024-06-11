@@ -15,12 +15,13 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
     @Body() signInDto: SignInDto,
   ) {
-    const { access_token } = await this.authService.signIn(signInDto);
-    response.cookie('access_token', access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-    });
-    return { access_token };
+    const data = await this.authService.signIn(signInDto);
+    response
+      .cookie('access_token', data.access_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      })
+      .json(data);
   }
 }

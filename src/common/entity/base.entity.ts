@@ -30,10 +30,9 @@ export class BaseEntity {
   updatedAt: Date;
 
   @AutoMap()
-  @ManyToOne(() => User, (user) => user.updatedEntities)
+  @ManyToOne(() => User, (user) => user.updatedEntities, { nullable: true })
   @JoinColumn({
     name: 'updated_by',
-    nullable: true,
   })
   updatedBy: User;
 

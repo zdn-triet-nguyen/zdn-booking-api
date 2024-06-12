@@ -8,13 +8,13 @@ import { Repository } from 'typeorm';
 import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
 import { ReadFieldDto } from '../dto/read-field.dto';
-import { Field } from '../entities/field.entity';
+import { FieldEntity } from '../entities/field.entity';
 
 @Injectable()
 export class FieldService {
   constructor(
-    @InjectRepository(Field)
-    private readonly fieldRepository: Repository<Field>,
+    @InjectRepository(FieldEntity)
+    private readonly fieldRepository: Repository<FieldEntity>,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 

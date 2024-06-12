@@ -1,16 +1,20 @@
-import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Inject, Post, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { Public } from 'nest-keycloak-connect';
+import { API_BEARER_AUTH } from 'src/constants/constants';
 import { SignInDto } from '../dto/sign-in.dto';
 import { AuthService } from '../services/auth.service';
 
 @Controller({ path: '/auth', version: '1' })
 @ApiTags('auth')
+@ApiBearerAuth(API_BEARER_AUTH)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
   @Post('/login')
   @HttpCode(200)
+  @Public()
   async signIn(
     @Res({ passthrough: true }) response: Response,
     @Body() signInDto: SignInDto,
@@ -19,8 +23,7 @@ export class AuthController {
     response
       .cookie('access_token', data.access_token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
       })
       .json(data);
   }

@@ -12,7 +12,7 @@ import {
   // MappingProfile,
 } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from '../entities/user.entity';
+import { User } from '../entities/user.entity';
 import { ReadUserDTO } from '../dto/read-user-dto';
 import { CreateAuthDto } from 'src/modules/auth/dto/create-auth.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -27,39 +27,39 @@ export class UserProfile extends AutomapperProfile {
     return (mapper) => {
       createMap(
         mapper,
-        UserEntity,
+        User,
         ReadUserDTO,
         // forMember((dest) => dest.password, ignore()),
       );
       createMap(
         mapper,
         CreateAuthDto,
-        UserEntity,
+        User,
         forMember((dest) => dest.id, ignore()),
       );
       createMap(
         mapper,
-        UserEntity,
+        User,
         CreateUserDto,
         forMember(
           (destination: CreateUserDto) => destination.name,
-          mapFrom((source: UserEntity) => source.name),
+          mapFrom((source: User) => source.name),
         ),
         forMember(
           (destination: CreateUserDto) => destination.email,
-          mapFrom((source: UserEntity) => source.email),
+          mapFrom((source: User) => source.email),
         ),
         forMember(
           (destination: CreateUserDto) => destination.phone,
-          mapFrom((source: UserEntity) => source.phone),
+          mapFrom((source: User) => source.phone),
         ),
         forMember(
           (destination: CreateUserDto) => destination.role,
-          mapFrom((source: UserEntity) => source.role),
+          mapFrom((source: User) => source.role),
         ),
         forMember(
           (destination: CreateUserDto) => destination.imageUrl,
-          mapFrom((source: UserEntity) => source.imageUrl),
+          mapFrom((source: User) => source.imageUrl),
         ),
       );
     };

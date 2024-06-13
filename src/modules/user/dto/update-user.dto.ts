@@ -1,21 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
 import { AutoMap } from '@automapper/classes';
-import { UserRole } from '../entities/user.entity';
+import { IsNotEmpty, IsPhoneNumber, IsString, IsUrl } from 'class-validator';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
   @AutoMap()
-  name?: string;
-
-  @AutoMap()
-  email?: string;
-
-  @AutoMap()
-  phone?: string;
+  @IsUrl()
+  @IsNotEmpty()
+  imageUrl: string;
 
   @AutoMap()
-  role?: UserRole;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
+  @IsPhoneNumber('VN')
+  @IsNotEmpty()
   @AutoMap()
-  imageUrl?: string;
+  phone: string;
 }

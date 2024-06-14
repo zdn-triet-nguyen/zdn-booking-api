@@ -1,18 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { LocationService } from './location.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { API_BEARER_AUTH, ROLE } from 'src/constants/constants';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { LocationService } from './location.service';
+import { Roles } from 'nest-keycloak-connect';
 @ApiTags('location')
 @Controller('location')
+@ApiBearerAuth(API_BEARER_AUTH)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
@@ -22,6 +25,9 @@ export class LocationController {
   }
 
   @Get()
+  @Roles({
+    roles: [ROLE.OWNER],
+  })
   findAll() {
     return this.locationService.findAll();
   }

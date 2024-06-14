@@ -16,23 +16,21 @@ import { FirebaseService } from '../services/firebase.service';
 @Controller('firebase')
 export class FirebaseController {
   constructor(private firebaseService: FirebaseService) {}
+
   @Post('upload-avatar')
   @UseInterceptors(FileInterceptor('file'))
   async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
     }
-    const imageUrl = await this.firebaseService.uploadFile(file, 'avatars');
-    return { imageUrl };
+    console.log('file', file);
+    const res = await this.firebaseService.uploadFile(file, 'avatars');
+    return res;
   }
 
   // @Post('upload-avatar')
-  // @UseInterceptors(FileInterceptor('file'))
-  // async uploadFile(@UploadedFile() file: Express.Multer.File) {
-  //   if (!file) {
-  //     throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
-  //   }
-  //   const imageUrl = await this.firebaseService.uploadFile(file);
-  //   return { imageUrl };
+  // async uploadFile(@Request() file: any) {
+  //   console.log('file', file);
+  //   return file.body;
   // }
 }

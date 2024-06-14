@@ -5,7 +5,7 @@ export class BaseResponse {
   timestamp: string;
 
   constructor(
-    data: any,
+    data: any[],
     message: string,
     statusCode: number,
     timestamp: string,

@@ -1,6 +1,8 @@
 import { Bucket } from '@google-cloud/storage';
 import { Inject, Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
+import { BaseResponse } from 'src/common/response/base.response';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class FirebaseService {
@@ -10,8 +12,12 @@ export class FirebaseService {
     this.bucket = this.firebaseApp.storage().bucket();
   }
 
-  async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
-    const fileRef = this.bucket.file(`${folder}/${file.originalname}`);
+  async uploadFile(
+    file: Express.Multer.File,
+    folder: string,
+  ): Promise<BaseResponse> {
+    const uuid = uuidv4();
+    const fileRef = this.bucket.file(`${folder}/${uuid}${file.originalname}`);
     const blobStream = fileRef.createWriteStream({
       metadata: {
         contentType: file.mimetype,
@@ -25,7 +31,14 @@ export class FirebaseService {
           .makePublic()
           .then(() => {
             const publicUrl = `https://storage.googleapis.com/${this.bucket.name}/${fileRef.name}`;
-            resolve(publicUrl);
+            resolve(
+              new BaseResponse(
+                [publicUrl],
+                'File uploaded successfully',
+                200,
+                new Date().toISOString(),
+              ),
+            );
           })
           .catch(reject);
       });

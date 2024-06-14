@@ -21,10 +21,12 @@ export class AuthController {
     @Body() signInDto: SignInDto,
   ) {
     const data = await this.authService.signIn(signInDto);
+    const ENVIRONMENT = process.env.NODE_ENV || 'development';
     response
       .cookie('access_token', data.access_token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: ENVIRONMENT === 'production',
+        sameSite: ENVIRONMENT === 'production' ? 'none' : 'lax',
       })
       .json(data);
   }

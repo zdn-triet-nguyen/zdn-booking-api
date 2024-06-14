@@ -14,8 +14,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../services/firebase.service';
 import { API_BEARER_AUTH } from 'src/constants/constants';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Public } from 'nest-keycloak-connect';
 
 @Controller('firebase')
+@Public()
 @ApiBearerAuth(API_BEARER_AUTH)
 export class FirebaseController {
   constructor(private firebaseService: FirebaseService) {}

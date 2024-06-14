@@ -24,6 +24,8 @@ import { SportFieldModule } from './modules/sport-field/sport-field.module';
 import { UserModule } from './modules/user/user.module';
 import { FiltersProvider } from './providers/filters.provider';
 import { GuardsProvider } from './providers/guards.provider';
+import { MailModule } from './modules/mail/mail.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
 
 @Module({
   imports: [
@@ -48,8 +50,8 @@ import { GuardsProvider } from './providers/guards.provider';
     FieldModule,
     BookingModule,
     LocationModule,
-    // MailModule,
-    // FirebaseModule,
+    MailModule,
+    FirebaseModule,
     AuthModule,
   ],
   controllers: [AppController],

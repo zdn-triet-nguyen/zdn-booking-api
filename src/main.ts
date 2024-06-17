@@ -1,12 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
-import { HttpExceptionFilter } from './common/error/http-exception.filter';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { UpdateValuesMissingErrorFilter } from './common/error/exception.filter';
-import 'reflect-metadata';
 import * as cookieParser from 'cookie-parser';
+import 'reflect-metadata';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/error/http-exception.filter';
 
 const PORT = process.env.PORT || 5000;
 
@@ -14,10 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(
-    new HttpExceptionFilter(),
-    new UpdateValuesMissingErrorFilter(),
-  );
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser.default());
   app.enableVersioning({
     type: VersioningType.URI,

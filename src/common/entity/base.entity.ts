@@ -16,7 +16,11 @@ export class BaseEntity {
   id: string;
 
   @AutoMap()
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   createdAt: Date;
 
   @AutoMap()
@@ -29,13 +33,15 @@ export class BaseEntity {
 
   @AutoMap()
   @Column({
+    type: 'uuid',
     name: 'created_by',
-    nullable: true,
+    nullable: false,
   })
   createdBy: string;
 
   @AutoMap()
   @Column({
+    type: 'uuid',
     name: 'updated_by',
     nullable: true,
   })
@@ -43,7 +49,9 @@ export class BaseEntity {
 
   @AutoMap()
   @Column({
+    type: 'uuid',
     name: 'deleted_by',
+    nullable: true,
   })
   deletedBy: string;
 

@@ -16,12 +16,12 @@ export abstract class BaseService<T> {
     return this.repository.find();
   }
 
-  async update(id: number, options: FindOneOptions<T>, entity: T): Promise<T> {
+  async update(id: string, options: FindOneOptions<T>, entity: T): Promise<T> {
     await this.repository.update(id, entity as QueryDeepPartialEntity<T>);
     return this.findOne(options);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.repository.delete(id);
   }
 }

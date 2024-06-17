@@ -7,7 +7,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { Field } from '../../field/entities/field.entity';
+import { FieldEntity } from '../../field/entities/field.entity';
 import { Location } from '../../location/entities/location.entity';
 import { SportFieldImage } from './sport-field-image.entity';
 import { SportFieldType } from './sport-field-type.entity';
@@ -23,11 +23,11 @@ export class SportField extends BaseEntity {
   @Column({ length: 10, nullable: false })
   phone: string;
 
-  @Column({ type: 'timestamp', nullable: false })
-  startTime: Date;
+  @Column({ nullable: false })
+  startTime: string;
 
-  @Column({ type: 'timestamp', nullable: false })
-  endTime: Date;
+  @Column({ nullable: false })
+  endTime: string;
 
   @Column({ type: 'float', nullable: false })
   price: number;
@@ -51,6 +51,6 @@ export class SportField extends BaseEntity {
   @OneToOne(() => Location, (location) => location.sportField)
   location: Location;
 
-  @OneToMany(() => Field, (field) => field.sportField)
-  fields: Field[];
+  @OneToMany(() => FieldEntity, (field) => field.sportFieldId)
+  fields: FieldEntity[];
 }

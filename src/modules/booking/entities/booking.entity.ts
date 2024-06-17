@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AutoMap } from '@automapper/classes';
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Field } from 'src/modules/field/entities/field.entity';
+import { FieldEntity } from 'src/modules/field/entities/field.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
@@ -24,9 +24,9 @@ export class Booking extends BaseEntity {
   fullName: string;
 
   @AutoMap()
-  @ManyToOne(() => Field, (field) => field.bookings, { nullable: false })
+  @ManyToOne(() => FieldEntity, (field) => field.bookings, { nullable: false })
   @JoinColumn({ name: 'field_id' })
-  fieldId: Field;
+  fieldId: FieldEntity;
 
   @AutoMap()
   @Column({ type: 'date', name: 'start_time' })

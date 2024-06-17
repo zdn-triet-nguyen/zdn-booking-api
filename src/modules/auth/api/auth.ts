@@ -27,7 +27,7 @@ export class KeycloakService {
       );
 
       return { access_token: data.data.access_token };
-    } catch (error) {
+    } catch (error: any) {
       return error.message;
     }
   }
@@ -45,7 +45,7 @@ export class KeycloakService {
       );
 
       return data.data;
-    } catch (error) {
+    } catch (error: any) {
       return error.response.data.errorMessage;
     }
   }
@@ -62,7 +62,7 @@ export class KeycloakService {
         },
       );
       return data.data;
-    } catch (error) {
+    } catch (error: any) {
       return error.message;
     }
   }
@@ -81,7 +81,7 @@ export class KeycloakService {
         },
       );
       return data.data;
-    } catch (error) {
+    } catch (error: any) {
       return error.response.data.errorMessage;
     }
   }
@@ -104,7 +104,7 @@ export class KeycloakService {
         },
       );
       return data.data;
-    } catch (error) {
+    } catch (error: any) {
       return error.response.data.errorMessage;
     }
   }
@@ -127,7 +127,7 @@ export class KeycloakService {
         },
       );
       return data.data;
-    } catch (error) {
+    } catch (error: any) {
       return error.response.data.errorMessage;
     }
   }

@@ -36,7 +36,7 @@ export class LocationService {
         Location,
         CreateLocationDto,
       );
-    } catch (ex) {
+    } catch (ex: any) {
       throw new Error(`create error: ${ex.message}.`);
     }
   }

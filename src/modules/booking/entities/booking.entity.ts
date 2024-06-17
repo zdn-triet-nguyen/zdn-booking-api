@@ -6,11 +6,11 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 export enum BookingStatus {
-  disabled = 'disabled',
-  rejected = 'rejected',
-  available = 'available',
-  accepted = 'accepted',
-  booking = 'booking',
+  DISABLED = 'disabled',
+  REJECTED = 'rejected',
+  AVAILABLE = 'available',
+  ACCEPTED = 'accepted',
+  BOOKING = 'booking',
 }
 
 @Entity('booking') // Specify the table name (optional)
@@ -44,7 +44,7 @@ export class Booking extends BaseEntity {
   @Column({
     type: 'enum',
     enum: BookingStatus,
-    default: BookingStatus.booking,
+    default: BookingStatus.BOOKING,
   })
   status: string;
 }

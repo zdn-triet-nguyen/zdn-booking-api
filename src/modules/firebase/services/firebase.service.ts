@@ -30,7 +30,7 @@ export class FirebaseService {
         fileRef
           .makePublic()
           .then(() => {
-            const publicUrl = `https://storage.googleapis.com/${this.bucket.name}/${fileRef.name}`;
+            const publicUrl = `${process.env.GOOGLE_API_HOST}${this.bucket.name}/${fileRef.name}`;
             resolve(
               new BaseResponse(
                 [publicUrl],

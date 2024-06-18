@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 import { IsNull, Not, Repository } from 'typeorm';
-
-import { CreateFieldDto } from '../dto/create-field.dto';
-import { UpdateFieldDto } from '../dto/update-field.dto';
-import { ReadFieldDto } from '../dto/read-field.dto';
-import { FieldEntity } from '../entities/field.entity';
 import { BaseService } from 'src/common/service/base.service';
+
+import { FieldEntity } from '../entities/field.entity';
+import { CreateFieldDto } from '../dto/create-field.dto';
+import { ReadFieldDto } from '../dto/read-field.dto';
+import { UpdateFieldDto } from '../dto/update-field.dto';
 
 @Injectable()
 export class FieldService extends BaseService<FieldEntity> {

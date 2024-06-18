@@ -8,20 +8,21 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Public } from 'nest-keycloak-connect';
+
 import { API_BEARER_AUTH } from 'src/constants/constants';
 import { FieldService } from './../services/field.service';
 
-import { CreateFieldDto } from '../dto/create-field.dto';
 // import { FieldEntity } from '../entities/field.entity';
+import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
 import { ReadFieldDto } from '../dto/read-field.dto';
 import { BaseResponse } from 'src/common/response/base.response';
-import { Public } from 'nest-keycloak-connect';
 
 @ApiTags('field')
-@Controller('field')
-@Public()
 @ApiBearerAuth(API_BEARER_AUTH)
+@Public()
+@Controller('field')
 export class FieldController {
   constructor(private readonly fieldService: FieldService) {}
 

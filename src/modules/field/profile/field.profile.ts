@@ -1,13 +1,6 @@
 /* istanbul ignore file */
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import {
-  createMap,
-  forMember,
-  // ignore,
-  mapFrom,
-  Mapper,
-  // MappingProfile,
-} from '@automapper/core';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { FieldEntity } from '../entities/field.entity';
 import { ReadFieldDto } from '../dto/read-field.dto';

@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { AccountEntity } from 'src/modules/account/entities/account.entity';
 import { BookingEntity } from 'src/modules/booking/entities/booking.entity';
+import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum UserRole {
@@ -48,6 +49,9 @@ export class UserEntity extends BaseEntity {
   @AutoMap()
   @OneToMany(() => AccountEntity, (account) => account.user)
   accounts: AccountEntity[];
+
+  @OneToMany(() => SportFieldEntity, (sportField) => sportField.owner)
+  ownedSportFields: SportFieldEntity[];
 
   @OneToMany(() => BookingEntity, (booking) => booking.createdBy)
   createdBookings: BookingEntity[];

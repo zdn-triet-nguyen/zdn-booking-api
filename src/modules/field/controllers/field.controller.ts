@@ -16,9 +16,11 @@ import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
 import { ReadFieldDto } from '../dto/read-field.dto';
 import { BaseResponse } from 'src/common/response/base.response';
+import { Public } from 'nest-keycloak-connect';
 
 @ApiTags('field')
 @Controller('field')
+@Public()
 @ApiBearerAuth(API_BEARER_AUTH)
 export class FieldController {
   constructor(private readonly fieldService: FieldService) {}
@@ -35,7 +37,7 @@ export class FieldController {
     );
   }
 
-  @Get(':sportFieldId')
+  @Get('sport-fied/:sportFieldId')
   async findFieldsBySportField(
     @Param('sportFieldId') sportFieldId: string,
   ): Promise<BaseResponse> {
@@ -69,27 +71,17 @@ export class FieldController {
     );
   }
 
-  // @Get()
-  // async findAll() {
-  //   return this.fieldService.findAll();
-  // }
-
-  // @Get(':id')
-  // async findOne(@Param('id') id: string) {
-  //   const field = await this.fieldService.findOne({ where: { id } }); // Corrected where clause
-  //   return this.fieldService.mapper.map(field, Field, ReadFieldDto);
-  // }
-
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: string,
-  //   @Body() updateFieldDto: UpdateFieldDto,
-  // ) {
-  //   return this.fieldService.update(id, updateFieldDto);
-  // }
-
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.fieldService.remove(id);
+  async softDelete(@Param('id') id: string): Promise<BaseResponse> {
+    const field: ReadFieldDto = await this.fieldService.deleteField(id);
+    if (!field) {
+      return new BaseResponse([], 'field_notFound', 404, new Date().toString());
+    }
+    return new BaseResponse(
+      [field],
+      'field_deleted',
+      200,
+      new Date().toString(),
+    );
   }
 }

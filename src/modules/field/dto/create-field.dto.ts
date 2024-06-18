@@ -17,8 +17,8 @@ export class CreateFieldDto {
   @IsNotEmpty()
   sportFieldId: string;
 
-  // @AutoMap()
-  // @IsString()
-  // @IsNotEmpty()
-  // createdBy: string;
+  @AutoMap()
+  @IsString()
+  @IsNotEmpty()
+  createdBy: string;
 }

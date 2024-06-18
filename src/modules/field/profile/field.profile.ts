@@ -13,6 +13,7 @@ import { FieldEntity } from '../entities/field.entity';
 import { ReadFieldDto } from '../dto/read-field.dto';
 import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
+import { SportField } from 'src/modules/sport-field/entities/sport-field.entity';
 
 @Injectable()
 export class FieldProfile extends AutomapperProfile {
@@ -23,12 +24,7 @@ export class FieldProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, FieldEntity, ReadFieldDto);
-      createMap(
-        mapper,
-        CreateFieldDto,
-        FieldEntity,
-        // forMember((dest) => dest.id, ignore()),
-      );
+      createMap(mapper, CreateFieldDto, FieldEntity);
       createMap(
         mapper,
         UpdateFieldDto,
@@ -36,6 +32,17 @@ export class FieldProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.name,
           mapFrom((source) => source.name),
+        ),
+        forMember(
+          (destination) => destination.sportFieldId,
+          mapFrom((source) => {
+            if (source.sportFieldId) {
+              const sportField = new SportField();
+              sportField.id = source.sportFieldId;
+              return sportField;
+            }
+            return undefined;
+          }),
         ),
       );
     };

@@ -4,6 +4,7 @@ import { User } from 'src/modules/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -28,7 +29,7 @@ export class BaseEntity {
   updatedAt: Date;
 
   @AutoMap()
-  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt: Date;
 
   @AutoMap()

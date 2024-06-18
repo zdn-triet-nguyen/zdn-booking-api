@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 
 import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
@@ -40,12 +40,24 @@ export class FieldService extends BaseService<FieldEntity> {
     updateFieldDto: UpdateFieldDto,
   ): Promise<ReadFieldDto> {
     const field = this.mapper.map(updateFieldDto, UpdateFieldDto, FieldEntity);
-    const updatedField = await this.update(id, { where: { id } }, field);
-
+    const updatedField = await this.update(
+      id,
+      { where: { id: id, deletedAt: IsNull() } },
+      field,
+    );
     return this.mapper.map(updatedField, FieldEntity, ReadFieldDto);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} field`;
+  async deleteField(id: string): Promise<ReadFieldDto> {
+    const field = await this.findOne({
+      where: { id: id, deletedAt: IsNull() },
+    });
+    if (!field) {
+      return null;
+    }
+    const deletedField = await this.delete(id, {
+      where: { id: id, deletedAt: Not(IsNull()) },
+    });
+    return this.mapper.map(deletedField, FieldEntity, ReadFieldDto);
   }
 }

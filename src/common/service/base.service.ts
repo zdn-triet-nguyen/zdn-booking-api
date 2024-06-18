@@ -5,7 +5,7 @@ export abstract class BaseService<T> {
   protected constructor(protected readonly repository: Repository<T>) {}
 
   async create(entity: T): Promise<T> {
-    return await this.repository.save(entity);
+    return this.repository.save(entity);
   }
 
   async findOne(options: FindOneOptions<T>): Promise<T> {
@@ -21,7 +21,8 @@ export abstract class BaseService<T> {
     return this.findOne(options);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.repository.delete(id);
+  async delete(id: string, options: FindOneOptions<T>): Promise<T> {
+    await this.repository.softDelete(id);
+    return this.findOne(options);
   }
 }

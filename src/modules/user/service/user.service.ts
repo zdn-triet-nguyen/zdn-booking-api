@@ -1,20 +1,21 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/service/base.service';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { KeycloakService } from 'src/modules/auth/api/auth';
 
 @Injectable()
-export class UserService extends BaseService<User> {
+export class UserService extends BaseService<UserEntity> {
   constructor(
     @InjectMapper()
     private readonly classMapper: Mapper,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
 
     private readonly keycloakService: KeycloakService,
   ) {

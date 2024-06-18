@@ -13,7 +13,7 @@ import { FieldEntity } from '../entities/field.entity';
 import { ReadFieldDto } from '../dto/read-field.dto';
 import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
-import { SportField } from 'src/modules/sport-field/entities/sport-field.entity';
+import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
 
 @Injectable()
 export class FieldProfile extends AutomapperProfile {
@@ -34,11 +34,11 @@ export class FieldProfile extends AutomapperProfile {
           mapFrom((source) => source.name),
         ),
         forMember(
-          (destination) => destination.sportFieldId,
+          (destination) => destination.sportField,
           mapFrom((source) => {
-            if (source.sportFieldId) {
-              const sportField = new SportField();
-              sportField.id = source.sportFieldId;
+            if (source.sportField) {
+              const sportField = new SportFieldEntity();
+              sportField.id = source.sportField;
               return sportField;
             }
             return undefined;

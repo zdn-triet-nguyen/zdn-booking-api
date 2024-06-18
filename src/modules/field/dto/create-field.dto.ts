@@ -15,7 +15,7 @@ export class CreateFieldDto {
   @AutoMap()
   @IsString()
   @IsNotEmpty()
-  sportFieldId: string;
+  sportField: string;
 
   @AutoMap()
   @IsString()

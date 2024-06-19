@@ -1,12 +1,31 @@
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsPositive,
+  IsUUID,
+} from 'class-validator';
 import { BookingStatus } from 'src/modules/booking/entities/booking.entity';
 export class CreateBookingDto {
-  id: number;
-  phone: string;
-  fullName: string;
+  @IsUUID()
+  @IsNotEmpty()
   fieldId: string;
+
+  @IsNotEmpty()
+  @IsDate()
+  @Type(() => Date)
   startTime: Date;
+
+  @IsNotEmpty()
+  @IsDate()
+  @Type(() => Date)
   endTime: Date;
+
+  @IsNotEmpty()
+  @IsPositive()
   amount: number;
-  createBy: string;
-  status: BookingStatus;
+
+  @IsEnum(BookingStatus)
+  status: BookingStatus = BookingStatus.BOOKING;
 }

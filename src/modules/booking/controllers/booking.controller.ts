@@ -42,4 +42,9 @@ export class BookingController {
   remove(@Param('id') id: string) {
     return this.bookingService.remove(+id);
   }
+
+  @Delete('remove-bookings/:id')
+  removeBookings(@Param('id') id: string) {
+    return this.bookingService.removeBookingOfField(id);
+  }
 }

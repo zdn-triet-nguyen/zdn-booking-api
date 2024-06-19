@@ -38,7 +38,7 @@ export class FieldController {
     );
   }
 
-  @Get('sport-fied/:sportFieldId')
+  @Get('sport-field/:sportFieldId')
   async findFieldsBySportField(
     @Param('sportFieldId') sportFieldId: string,
   ): Promise<BaseResponse> {

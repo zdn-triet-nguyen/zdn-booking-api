@@ -1,22 +1,12 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  UseInterceptors,
-} from '@nestjs/common';
-import { BookingService } from '../services/booking.service';
-import { CreateBookingDto } from '../dto/create-booking.dto';
-import { UpdateBookingDto } from '../dto/update-booking.dto';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { API_BEARER_AUTH } from 'src/constants/constants';
 import { User } from 'src/decorators/user.decorator';
 import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
+import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { CreateBookingDto } from '../dto/create-booking.dto';
+import { BookingService } from '../services/booking.service';
+import { ReadBookingDto } from '../dto/read-booking.dto';
 
 @Controller('booking')
 @ApiBearerAuth(API_BEARER_AUTH)
@@ -30,5 +20,10 @@ export class BookingController {
     @Body() createBookingDto: CreateBookingDto,
   ) {
     return this.bookingService.createBooking(user, createBookingDto);
+  }
+
+  @Get()
+  getBookings(@Body() readBookingDto: ReadBookingDto) {
+    return this.bookingService.getBookings(readBookingDto);
   }
 }

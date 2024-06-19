@@ -75,8 +75,23 @@ export class UserService extends BaseService<UserEntity> {
     if (userExist) {
       return userExist;
     }
-    console.log('🚀 ~ UserService ~ userExist:', userExist);
+    const dataToken = await this.keycloakService.getAccessTokenRealms();
+    const roleUser = await this.keycloakService.getRoleIdKeyCloak(
+      dataToken.access_token,
+      createSocialUserDto.role,
+    );
+    const userRole = [
+      {
+        id: roleUser.id,
+        name: createSocialUserDto.role,
+      },
+    ];
 
+    await this.keycloakService.createRoleUserKeyCloak(
+      user.id,
+      dataToken.access_token,
+      userRole,
+    );
     try {
       await this.userRepository.save({
         ...user,

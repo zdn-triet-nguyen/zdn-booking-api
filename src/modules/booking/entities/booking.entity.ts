@@ -29,11 +29,11 @@ export class BookingEntity extends BaseEntity {
   field: FieldEntity;
 
   @AutoMap()
-  @Column({ type: 'date', name: 'start_time' })
+  @Column({ type: 'timestamp', name: 'start_time' })
   startTime: Date;
 
   @AutoMap()
-  @Column({ type: 'date', name: 'end_time' })
+  @Column({ type: 'timestamp', name: 'end_time' })
   endTime: Date;
 
   @AutoMap()

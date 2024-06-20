@@ -12,6 +12,7 @@ import { CreateBookingDto } from '../dto/create-booking.dto';
 import { UpdateBookingDto } from '../dto/update-booking.dto';
 import { API_BEARER_AUTH } from 'src/constants/constants';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { UpdateStatusBookingDto } from '../dto/update-status-booking.dto';
 
 @Controller('booking')
 @ApiBearerAuth(API_BEARER_AUTH)
@@ -20,7 +21,7 @@ export class BookingController {
 
   @Post()
   create(@Body() createBookingDto: CreateBookingDto) {
-    return this.bookingService.create(createBookingDto);
+    return ' this.bookingService.create(createBookingDto);';
   }
 
   @Get()
@@ -30,12 +31,12 @@ export class BookingController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.bookingService.findOne(+id);
+    return 'booking';
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(+id, updateBookingDto);
+    return ' this.bookingService.update(id, updateBookingDto);';
   }
 
   @Delete(':id')
@@ -45,6 +46,14 @@ export class BookingController {
 
   @Delete('remove-bookings/:id')
   removeBookings(@Param('id') id: string) {
-    return this.bookingService.removeBookingOfField(id);
+    return this.bookingService.removeBookingOfSportField(id);
+  }
+  @Patch('update-status-booking/:id')
+  updateStatusBookings(
+    @Param('id') id: string,
+    @Body() data: UpdateStatusBookingDto,
+  ) {
+    return this.bookingService.updateStatusBooking(id, data);
   }
 }
+

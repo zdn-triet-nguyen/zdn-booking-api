@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
-import { CreateBookingDto } from '../dto/create-booking.dto';
-import { UpdateBookingDto } from '../dto/update-booking.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { BookingEntity } from '../entities/booking.entity';
-import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { Repository } from 'typeorm';
+import { InjectMapper } from '@automapper/nestjs';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/service/base.service';
+import { FieldEntity } from 'src/modules/field/entities/field.entity';
 import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
 import { UpdateStatusBookingDto } from '../dto/update-status-booking.dto';
-import { FieldEntity } from 'src/modules/field/entities/field.entity';
+import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { CreateBookingDto } from '../dto/create-booking.dto';
+import { ReadBookingDto } from '../dto/read-booking.dto';
+import { BookingEntity } from '../entities/booking.entity';
 
 @Injectable()
 export class BookingService extends BaseService<BookingEntity> {
@@ -25,6 +26,40 @@ export class BookingService extends BaseService<BookingEntity> {
     public readonly mapper: Mapper,
   ) {
     super(bookingRepository);
+  }
+
+  async createBooking(user: ReadUserDTO, createBookingDto: CreateBookingDto) {
+    const field = await this.fieldRepository.findOne({
+      where: { id: createBookingDto.fieldId },
+    });
+
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+
+    const { id, ...userInfo } = user;
+
+    const newBooking = await this.bookingRepository.save({
+      ...createBookingDto,
+      ...userInfo,
+      field,
+      fullName: user.name,
+      createdBy: user.id,
+      updatedBy: user.id,
+    });
+
+    return newBooking;
+  }
+
+  getBookings(readBookingDto: ReadBookingDto) {
+    return this.bookingRepository.find({
+      where: {
+        field: { id: readBookingDto.fieldId },
+        startTime:
+          MoreThanOrEqual(readBookingDto.startTime) &&
+          LessThanOrEqual(readBookingDto.endTime),
+      },
+    });
   }
 
   remove(id: number) {

@@ -4,7 +4,7 @@ import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 export const User = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-
+    console.log(request.user);
     const name =
       request.user.full_name ??
       `${request.user.given_name} ${request.user.family_name}`;

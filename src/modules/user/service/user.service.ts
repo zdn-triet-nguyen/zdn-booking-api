@@ -96,6 +96,7 @@ export class UserService extends BaseService<UserEntity> {
       await this.userRepository.save({
         ...user,
         role: createSocialUserDto.role,
+        createdBy: user.id,
       });
     } catch (error) {
       console.log('🚀 ~ UserService ~ error:', error);

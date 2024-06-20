@@ -1,12 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsEnum,
-  IsNotEmpty,
-  IsPositive,
-  IsUUID,
-} from 'class-validator';
-import { BookingStatus } from 'src/modules/booking/entities/booking.entity';
+import { IsDate, IsNotEmpty, IsPositive, IsUUID } from 'class-validator';
 export class CreateBookingDto {
   @IsUUID()
   @IsNotEmpty()
@@ -25,7 +18,4 @@ export class CreateBookingDto {
   @IsNotEmpty()
   @IsPositive()
   amount: number;
-
-  @IsEnum(BookingStatus)
-  status: BookingStatus = BookingStatus.BOOKING;
 }

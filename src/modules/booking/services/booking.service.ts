@@ -10,7 +10,7 @@ import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { ReadBookingDto } from '../dto/read-booking.dto';
-import { BookingEntity } from '../entities/booking.entity';
+import { BookingEntity, BookingStatus } from '../entities/booking.entity';
 
 @Injectable()
 export class BookingService extends BaseService<BookingEntity> {
@@ -39,8 +39,9 @@ export class BookingService extends BaseService<BookingEntity> {
     const { id, ...userInfo } = user;
 
     const newBooking = await this.bookingRepository.save({
-      ...createBookingDto,
       ...userInfo,
+      ...createBookingDto,
+      status: BookingStatus.BOOKING,
       field,
       fullName: user.name,
       createdBy: user.id,
@@ -52,12 +53,10 @@ export class BookingService extends BaseService<BookingEntity> {
 
   getBookings(readBookingDto: ReadBookingDto) {
     return this.bookingRepository.find({
-      where: {
-        field: { id: readBookingDto.fieldId },
-        startTime:
-          MoreThanOrEqual(readBookingDto.startTime) &&
-          LessThanOrEqual(readBookingDto.endTime),
-      },
+      // where: {
+      //   field: { id: readBookingDto.fieldId },
+      //   startTime: MoreThanOrEqual(readBookingDto.startTime),
+      // },
     });
   }
 

@@ -144,13 +144,16 @@ export class AuthService {
     );
     const newUser = this.mapper.map(createAuthDto, CreateAuthDto, UserEntity);
     newUser.id = user[0].id;
-    const createdUser = await this.userRepository.save(newUser);
+    const createdUser = await this.userRepository.save({
+      ...newUser,
+      createdBy: newUser.id,
+    });
 
     const newAccount = new AccountEntity();
     newAccount.name = accountType;
     newAccount.user = createdUser;
 
-    this.accountRepository.save(newAccount);
+    this.accountRepository.save({ ...newAccount, createdBy: newUser.id });
 
     return {
       status: 'Success',

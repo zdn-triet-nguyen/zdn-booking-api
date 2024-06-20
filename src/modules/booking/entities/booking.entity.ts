@@ -16,7 +16,7 @@ export enum BookingStatus {
 @Entity('booking') // Specify the table name (optional)
 export class BookingEntity extends BaseEntity {
   @AutoMap()
-  @Column({ type: 'character varying', length: 10 })
+  @Column({ type: 'character varying', length: 10, nullable: true })
   phone: string;
 
   @AutoMap()

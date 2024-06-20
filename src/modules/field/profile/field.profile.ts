@@ -1,12 +1,11 @@
 /* istanbul ignore file */
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { FieldEntity } from '../entities/field.entity';
 import { ReadFieldDto } from '../dto/read-field.dto';
 import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
-import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
 
 @Injectable()
 export class FieldProfile extends AutomapperProfile {
@@ -22,21 +21,10 @@ export class FieldProfile extends AutomapperProfile {
         mapper,
         UpdateFieldDto,
         FieldEntity,
-        forMember(
-          (destination) => destination.name,
-          mapFrom((source) => source.name),
-        ),
-        forMember(
-          (destination) => destination.sportField,
-          mapFrom((source) => {
-            if (source.sportField) {
-              const sportField = new SportFieldEntity();
-              sportField.id = source.sportField;
-              return sportField;
-            }
-            return undefined;
-          }),
-        ),
+        // forMember(
+        //   (destination) => destination.name,
+        //   mapFrom((source) => source.name),
+        // ),
       );
     };
   }

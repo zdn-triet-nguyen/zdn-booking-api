@@ -6,7 +6,7 @@ import { AutoMap } from '@automapper/classes';
 @Entity('sport_field_type')
 export class SportFieldTypeEntity extends BaseEntity {
   @AutoMap()
-  @Column({ nullable: false })
+  @Column('character varying', { nullable: false })
   name: string;
 
   @OneToMany(() => SportFieldEntity, (sportField) => sportField.sportFieldType)

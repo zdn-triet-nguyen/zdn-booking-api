@@ -5,7 +5,7 @@ export class CreateLocationDto {
   @AutoMap()
   @IsOptional()
   @IsString()
-  sportField?: string;
+  sportFieldId?: string;
 
   @AutoMap()
   @IsOptional()

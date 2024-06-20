@@ -6,15 +6,18 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 @Entity('field')
 export class FieldEntity extends BaseEntity {
   @AutoMap()
+  @Column('character varying', { length: 255 })
+  name: string;
+
+  @AutoMap()
+  @Column('uuid', { name: 'sport_field_id' })
+  sportFieldId: string;
+
   @ManyToOne(() => SportFieldEntity, (sportField) => sportField.fields, {
     nullable: false,
   })
   @JoinColumn({ name: 'sport_field_id' })
   sportField: SportFieldEntity;
-
-  @AutoMap()
-  @Column('character varying', { length: 255 })
-  name: string;
 
   @OneToMany(() => BookingEntity, (booking) => booking.field)
   bookings: BookingEntity[];

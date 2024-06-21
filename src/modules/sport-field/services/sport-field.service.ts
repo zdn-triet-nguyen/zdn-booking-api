@@ -17,6 +17,9 @@ import { CreateLocationDto } from 'src/modules/location/dto/create-location.dto'
 import { CreateSportFieldImageDto } from '../dto/sport-field-image/create-sport-field-image.dto';
 import { UploadImageDto } from 'src/common/dto/upload-image.dto';
 import { CreateFieldDto } from 'src/modules/field/dto/create-field.dto';
+import { Pagination } from 'src/decorators/pagination.decorator';
+import { getWhere } from 'src/helpers/typeorm.helper';
+import { Filtering } from 'src/decorators/filter.decorator';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -30,6 +33,55 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     private readonly locationService: LocationService,
   ) {
     super(sportFieldRepository);
+  }
+
+  getSportFieldQuery(sportFieldId: string) {
+    return sportFieldId ? { id: sportFieldId } : {};
+  }
+
+  async getUserSportFields(
+    userId: string,
+    { limit, offset }: Pagination,
+    sportFieldTypeId?: string,
+  ): Promise<ReadSportFieldDto[]> {
+    const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
+    const sportFields: SportFieldEntity[] =
+      await this.sportFieldRepository.find({
+        where: { ownerId: userId, sportFieldType },
+        take: limit,
+        skip: offset,
+      });
+
+    return this.mapper.mapArray(
+      sportFields,
+      SportFieldEntity,
+      ReadSportFieldDto,
+    );
+  }
+
+  async getSportFields(
+    { limit, offset }: Pagination,
+    filter?: Filtering,
+    sportFieldTypeId?: string,
+  ): Promise<ReadSportFieldDto[]> {
+    const where = getWhere(filter);
+    const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
+
+    const sportFields: SportFieldEntity[] =
+      await this.sportFieldRepository.find({
+        where: {
+          ...where,
+          sportFieldType,
+        },
+        take: limit,
+        skip: offset,
+      });
+
+    return this.mapper.mapArray(
+      sportFields,
+      SportFieldEntity,
+      ReadSportFieldDto,
+    );
   }
 
   async createSportField(

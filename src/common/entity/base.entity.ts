@@ -2,6 +2,10 @@
 import { AutoMap } from '@automapper/classes';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import {
+  AfterRemove,
+  BeforeInsert,
+  BeforeRemove,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -55,6 +59,27 @@ export class BaseEntity {
     nullable: true,
   })
   deletedBy: string;
+
+  @BeforeInsert()
+  setUpdatedByBeforeInsert() {
+    if (!this.updatedBy) {
+      this.updatedBy = this.createdBy;
+    }
+  }
+
+  @BeforeUpdate()
+  setUpdatedByBeforeUpdate() {
+    if (!this.updatedBy) {
+      this.updatedBy = this.createdBy;
+    }
+  }
+
+  @AfterRemove()
+  setDeletedByBeforeRemove() {
+    if (!this.deletedBy) {
+      this.deletedBy = this.updatedBy; // or set to a specific value
+    }
+  }
 
   // @AutoMap()
   // @ManyToOne(() => User, (user) => user.createdEntities)

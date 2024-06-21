@@ -17,7 +17,7 @@ import { AutoMap } from '@automapper/classes';
 @Entity('sport_field')
 export class SportFieldEntity extends BaseEntity {
   @AutoMap()
-  @Column({ length: 255, nullable: false })
+  @Column('character varying', { length: 255, nullable: false })
   name: string;
 
   @AutoMap()
@@ -51,6 +51,10 @@ export class SportFieldEntity extends BaseEntity {
   )
   @JoinColumn({ name: 'sport_field_type_id' })
   sportFieldType: SportFieldTypeEntity;
+
+  @AutoMap()
+  @Column('uuid', { name: 'owner_id', nullable: false })
+  ownerId: string;
 
   @AutoMap()
   @ManyToOne(() => UserEntity, (owner) => owner.ownedSportFields)

@@ -22,7 +22,7 @@ export class SportFieldImageService extends BaseService<SportFieldImageEntity> {
   async createSportFieldImage(
     image: CreateSportFieldImageDto,
   ): Promise<ReadSportFieldImageDto> {
-    const sportFieldImage = this.mapper.map(
+    const sportFieldImage: SportFieldImageEntity = this.mapper.map(
       image,
       CreateSportFieldImageDto,
       SportFieldImageEntity,
@@ -36,7 +36,7 @@ export class SportFieldImageService extends BaseService<SportFieldImageEntity> {
   }
 
   async findAllSportFieldImages(): Promise<ReadSportFieldImageDto[]> {
-    const sportFieldImages = await this.findAll();
+    const sportFieldImages: SportFieldImageEntity[] = await this.findAll();
     return this.mapper.mapArray(
       sportFieldImages,
       SportFieldImageEntity,
@@ -47,9 +47,10 @@ export class SportFieldImageService extends BaseService<SportFieldImageEntity> {
   async findSportFieldImagesBySportFieldId(
     sportFieldId: string,
   ): Promise<ReadSportFieldImageDto[]> {
-    const sportFieldImages = await this.sportFieldImageRepository.find({
-      where: { sportField: { id: sportFieldId } },
-    });
+    const sportFieldImages: SportFieldImageEntity[] =
+      await this.sportFieldImageRepository.find({
+        where: { sportField: { id: sportFieldId } },
+      });
     return this.mapper.mapArray(
       sportFieldImages,
       SportFieldImageEntity,

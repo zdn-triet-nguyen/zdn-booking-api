@@ -28,16 +28,24 @@ export class FieldService extends BaseService<FieldEntity> {
     return this.mapper.map(createdField, FieldEntity, ReadFieldDto);
   }
 
+  async findFieldById(id: string): Promise<ReadFieldDto> {
+    const field = await this.findOne({
+      where: { id: id, deletedAt: IsNull() },
+    });
+    return this.mapper.map(field, FieldEntity, ReadFieldDto);
+  }
+
   async findFieldsBySportField(sportFieldId: string): Promise<ReadFieldDto[]> {
     const fields = await this.fieldRepository.find({
-      where: { sportField: { id: sportFieldId } },
+      where: { sportFieldId: sportFieldId },
+      relations: ['sportField'],
     });
     return this.mapper.mapArray(fields, FieldEntity, ReadFieldDto);
   }
 
   async updateField(
     id: string,
-    updateFieldDto: UpdateFieldDto,
+    updateFieldDto: Partial<UpdateFieldDto>,
   ): Promise<ReadFieldDto> {
     const field = this.mapper.map(updateFieldDto, UpdateFieldDto, FieldEntity);
     const updatedField = await this.update(

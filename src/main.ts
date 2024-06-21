@@ -6,6 +6,7 @@ import * as cookieParser from 'cookie-parser';
 import 'reflect-metadata';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/error/http-exception.filter';
+import { AllExceptionsFilter } from './common/error/all-exception.filter';
 
 const PORT = process.env.PORT || 5000;
 
@@ -13,7 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(), new AllExceptionsFilter());
   app.use(cookieParser.default());
   app.enableVersioning({
     type: VersioningType.URI,

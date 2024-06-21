@@ -25,8 +25,8 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Delete('remove-bookings/:id')
-  removeBookings(@Param('id') id: string) {
-    return this.bookingService.removeBookingOfSportField(id);
+  removeBookings(@Param('id') id: string, @User() user: ReadUserDTO) {
+    return this.bookingService.removeBookingOfSportField(id, user);
   }
   @Patch('update-status-booking/:id')
   updateStatusBookings(
@@ -46,5 +46,9 @@ export class BookingController {
   @Get()
   getBookings(@Body() readBookingDto: ReadBookingDto) {
     return this.bookingService.getBookings(readBookingDto);
+  }
+  @Get('/bookings-sports-field/:id')
+  getBookingSportField(@Param('id') id: string) {
+    return this.bookingService.getBookingsBySportFieldId(id);
   }
 }

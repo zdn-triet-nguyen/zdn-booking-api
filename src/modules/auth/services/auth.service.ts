@@ -40,6 +40,7 @@ export class AuthService {
 
     try {
       const response = await this.requestKeycloakToken(formData);
+
       return response.data;
     } catch (error) {
       throw new UnauthorizedException('Invalid credentials');

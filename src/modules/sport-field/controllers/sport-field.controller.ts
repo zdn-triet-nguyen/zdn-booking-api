@@ -33,6 +33,10 @@ import {
   RemoveSportFieldImageEvent,
   UpdateLocationEvent,
 } from '../events/sport-field-events.event';
+import {
+  Pagination,
+  PaginationParams,
+} from 'src/decorators/pagination.decorator';
 
 @ApiTags('sport-field')
 @Controller('sport-field')
@@ -128,6 +132,19 @@ export class SportFieldController {
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  @Get()
+  async getSportFields(
+    @PaginationParams() pagination: Pagination,
+  ): Promise<BaseResponse> {
+    const sportFields = await this.sportFieldService.getSportFields(pagination);
+    return new BaseResponse(
+      sportFields,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get(':id')

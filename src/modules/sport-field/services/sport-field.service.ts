@@ -17,6 +17,7 @@ import { CreateLocationDto } from 'src/modules/location/dto/create-location.dto'
 import { CreateSportFieldImageDto } from '../dto/sport-field-image/create-sport-field-image.dto';
 import { UploadImageDto } from 'src/common/dto/upload-image.dto';
 import { CreateFieldDto } from 'src/modules/field/dto/create-field.dto';
+import { Pagination } from 'src/decorators/pagination.decorator';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -30,6 +31,23 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     private readonly locationService: LocationService,
   ) {
     super(sportFieldRepository);
+  }
+
+  async getSportFields({
+    limit,
+    offset,
+  }: Pagination): Promise<ReadSportFieldDto[]> {
+    const sportFields: SportFieldEntity[] =
+      await this.sportFieldRepository.find({
+        take: limit,
+        skip: offset,
+      });
+
+    return this.mapper.mapArray(
+      sportFields,
+      SportFieldEntity,
+      ReadSportFieldDto,
+    );
   }
 
   async createSportField(

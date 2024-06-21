@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { API_BEARER_AUTH } from 'src/constants/constants';
@@ -140,10 +141,12 @@ export class SportFieldController {
   async getUserSportFields(
     @User() user: ReadUserDTO,
     @PaginationParams() pagination: Pagination,
+    @Query('sportFieldTypeId') sportFieldTypeId?: string,
   ): Promise<BaseResponse> {
     const sportFields = await this.sportFieldService.getUserSportFields(
       user.id,
       pagination,
+      sportFieldTypeId,
     );
     return new BaseResponse(
       sportFields,
@@ -165,10 +168,12 @@ export class SportFieldController {
       'ownerId',
     ])
     filtering?: Filtering,
+    @Query('sportFieldTypeId') sportFieldTypeId?: string,
   ): Promise<BaseResponse> {
     const sportFields = await this.sportFieldService.getSportFields(
       pagination,
       filtering,
+      sportFieldTypeId,
     );
     return new BaseResponse(
       sportFields,

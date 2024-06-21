@@ -9,5 +9,5 @@ export class ReadSportFieldDto extends CreateSportFieldDto {
   location: string;
 
   @AutoMap()
-  fields: string[];
+  fields: any[];
 }

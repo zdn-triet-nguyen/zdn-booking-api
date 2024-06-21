@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,6 +14,7 @@ import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { LocationService } from './location.service';
 import { Roles } from 'nest-keycloak-connect';
+import { BaseResponse } from 'src/common/response/base.response';
 @ApiTags('location')
 @Controller('location')
 @ApiBearerAuth(API_BEARER_AUTH)
@@ -20,63 +22,164 @@ export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
   @Post()
-  async create(@Body() createLocationDto: CreateLocationDto) {
-    return this.locationService.create(createLocationDto);
+  async create(
+    @Body() createLocationDto: CreateLocationDto,
+  ): Promise<BaseResponse> {
+    const res = this.locationService.create(createLocationDto);
+    if (!res) {
+      throw new BadRequestException('location_not_created');
+    }
+    return new BaseResponse(
+      [res],
+      'location_created',
+      201,
+      new Date().toString(),
+    );
   }
 
   @Get()
   @Roles({
     roles: [ROLE.OWNER],
   })
-  findAll() {
-    return this.locationService.findAll();
+  async findAll(): Promise<BaseResponse> {
+    const res = await this.locationService.findAll();
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get('provinces')
-  findAllProvince() {
-    return this.locationService.findAllProvince();
+  async findAllProvince(): Promise<BaseResponse> {
+    const res = await this.locationService.findAllProvince();
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get('districts')
-  findAllDistrict() {
-    return this.locationService.findAllDistrict();
+  async findAllDistrict(): Promise<BaseResponse> {
+    const res = await this.locationService.findAllDistrict();
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get('ward')
-  findAllWard() {
-    return this.locationService.findAllWard();
+  async findAllWard() {
+    const res = await this.locationService.findAllWard();
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get('province/:id')
-  findByProvince(@Param('id') id: string) {
-    return this.locationService.findByProvince(id);
+  async findByProvince(@Param('id') id: string): Promise<BaseResponse> {
+    const res = await this.locationService.findByProvince(id);
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get('district/:id')
-  findByDistrict(@Param('id') id: string) {
-    return this.locationService.findByDistrict(id);
+  async findByDistrict(@Param('id') id: string): Promise<BaseResponse> {
+    const res = await this.locationService.findByDistrict(id);
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get('ward/:id')
-  findByWard(@Param('id') id: string) {
-    return this.locationService.findByWard(id);
+  async findByWard(@Param('id') id: string): Promise<BaseResponse> {
+    const res = await this.locationService.findByWard(id);
+    if (!res) {
+      throw new BadRequestException('location_not_retrieved');
+    }
+    return new BaseResponse(
+      [res],
+      'location_retrieved',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateLocationDto: UpdateLocationDto,
-  ) {
-    return this.locationService.update(id, updateLocationDto);
+  ): Promise<BaseResponse> {
+    const res = await this.locationService.update(id, updateLocationDto);
+    if (!res) {
+      throw new BadRequestException('location_not_updated');
+    }
+    return new BaseResponse(
+      [res],
+      'location_updated',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.locationService.remove(id);
+  async remove(@Param('id') id: string): Promise<BaseResponse> {
+    const res = await this.locationService.remove(id);
+    if (!res) {
+      throw new BadRequestException('location_not_removed');
+    }
+    return new BaseResponse(
+      [res],
+      'location_removed',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.locationService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<BaseResponse> {
+    const res = await this.locationService.findOne(id);
+    if (!res) {
+      throw new BadRequestException('location_not_found');
+    }
+    return new BaseResponse(
+      [res],
+      'location_found',
+      200,
+      new Date().toString(),
+    );
   }
 }

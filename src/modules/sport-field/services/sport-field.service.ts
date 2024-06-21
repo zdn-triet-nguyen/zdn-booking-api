@@ -1,3 +1,4 @@
+import { FieldService } from './../../field/services/field.service';
 import { LocationService } from './../../location/location.service';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
@@ -15,6 +16,10 @@ import { SportFieldImageService } from './sport-field-image/sport-field-image.se
 import { CreateLocationDto } from 'src/modules/location/dto/create-location.dto';
 import { CreateSportFieldImageDto } from '../dto/sport-field-image/create-sport-field-image.dto';
 import { UploadImageDto } from 'src/common/dto/upload-image.dto';
+import { CreateFieldDto } from 'src/modules/field/dto/create-field.dto';
+import { Pagination } from 'src/decorators/pagination.decorator';
+import { getWhere } from 'src/helpers/typeorm.helper';
+import { Filtering } from 'src/decorators/filter.decorator';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -23,10 +28,60 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     private readonly sportFieldRepository: Repository<SportFieldEntity>,
     @InjectMapper()
     private readonly mapper: Mapper,
+    private readonly fieldService: FieldService,
     private readonly sportFieldImageService: SportFieldImageService,
     private readonly locationService: LocationService,
   ) {
     super(sportFieldRepository);
+  }
+
+  getSportFieldQuery(sportFieldId: string) {
+    return sportFieldId ? { id: sportFieldId } : {};
+  }
+
+  async getUserSportFields(
+    userId: string,
+    { limit, offset }: Pagination,
+    sportFieldTypeId?: string,
+  ): Promise<ReadSportFieldDto[]> {
+    const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
+    const sportFields: SportFieldEntity[] =
+      await this.sportFieldRepository.find({
+        where: { ownerId: userId, sportFieldType },
+        take: limit,
+        skip: offset,
+      });
+
+    return this.mapper.mapArray(
+      sportFields,
+      SportFieldEntity,
+      ReadSportFieldDto,
+    );
+  }
+
+  async getSportFields(
+    { limit, offset }: Pagination,
+    filter?: Filtering,
+    sportFieldTypeId?: string,
+  ): Promise<ReadSportFieldDto[]> {
+    const where = getWhere(filter);
+    const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
+
+    const sportFields: SportFieldEntity[] =
+      await this.sportFieldRepository.find({
+        where: {
+          ...where,
+          sportFieldType,
+        },
+        take: limit,
+        skip: offset,
+      });
+
+    return this.mapper.mapArray(
+      sportFields,
+      SportFieldEntity,
+      ReadSportFieldDto,
+    );
   }
 
   async createSportField(
@@ -38,22 +93,6 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       SportFieldEntity,
     );
     const createdSportField: SportFieldEntity = await this.create(sportField);
-
-    createSportFieldDto.sportFieldImages?.map(async (image) => {
-      const sportFieldImage: CreateSportFieldImageDto = {
-        sportField: createdSportField.id,
-        ...image,
-        createdBy: createSportFieldDto.createdBy,
-      };
-      await this.sportFieldImageService.createSportFieldImage(sportFieldImage);
-    });
-
-    if (createSportFieldDto.location) {
-      await this.locationService.create({
-        sportField: createdSportField.id,
-        ...(createSportFieldDto.location as CreateLocationDto),
-      });
-    }
 
     return this.mapper.map(
       createdSportField,
@@ -69,7 +108,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
 
   async updateSportField(
     id: string,
-    updateSportFieldDto: UpdateSportFieldDto,
+    updateSportFieldDto: Partial<UpdateSportFieldDto>,
   ): Promise<ReadSportFieldDto> {
     const sportField: SportFieldEntity = this.mapper.map(
       updateSportFieldDto,
@@ -86,5 +125,13 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       SportFieldEntity,
       ReadSportFieldDto,
     );
+  }
+
+  async deleteSportField(id: string): Promise<ReadSportFieldDto> {
+    const sportField: SportFieldEntity = await this.delete(id, {
+      where: { id },
+    });
+
+    return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
   }
 }

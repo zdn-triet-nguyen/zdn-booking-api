@@ -6,12 +6,16 @@ import { AutoMap } from '@automapper/classes';
 @Entity('sport_field_image')
 export class SportFieldImageEntity extends BaseEntity {
   @AutoMap()
-  @Column({ nullable: false })
+  @Column('character varying', { nullable: false, length: 255 })
   name: string;
 
   @AutoMap()
   @Column({ nullable: false })
   url: string;
+
+  @AutoMap()
+  @Column('uuid', { name: 'sport_field_id', nullable: false })
+  sportFieldId: string;
 
   @AutoMap()
   @ManyToOne(

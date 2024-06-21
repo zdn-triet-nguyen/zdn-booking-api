@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import {
   // IsDate,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -15,10 +16,10 @@ export class CreateFieldDto {
   @AutoMap()
   @IsString()
   @IsNotEmpty()
-  sportField: string;
+  sportFieldId: string;
 
   @AutoMap()
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  createdBy: string;
+  createdBy?: string;
 }

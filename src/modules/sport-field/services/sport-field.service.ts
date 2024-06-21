@@ -35,6 +35,24 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     super(sportFieldRepository);
   }
 
+  async getUserSportFields(
+    userId: string,
+    { limit, offset }: Pagination,
+  ): Promise<ReadSportFieldDto[]> {
+    const sportFields: SportFieldEntity[] =
+      await this.sportFieldRepository.find({
+        where: { ownerId: userId },
+        take: limit,
+        skip: offset,
+      });
+
+    return this.mapper.mapArray(
+      sportFields,
+      SportFieldEntity,
+      ReadSportFieldDto,
+    );
+  }
+
   async getSportFields(
     { limit, offset }: Pagination,
     filter?: Filtering,

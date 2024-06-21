@@ -38,11 +38,12 @@ import {
   PaginationParams,
 } from 'src/decorators/pagination.decorator';
 import { Filtering, FilteringParams } from 'src/decorators/filter.decorator';
+import { User } from 'src/decorators/user.decorator';
+import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 
 @ApiTags('sport-field')
 @Controller('sport-field')
 @ApiBearerAuth(API_BEARER_AUTH)
-@Public()
 export class SportFieldController {
   constructor(
     private readonly sportFieldService: SportFieldService,
@@ -135,10 +136,34 @@ export class SportFieldController {
     }
   }
 
+  @Get('me')
+  async getUserSportFields(
+    @User() user: ReadUserDTO,
+    @PaginationParams() pagination: Pagination,
+  ): Promise<BaseResponse> {
+    const sportFields = await this.sportFieldService.getUserSportFields(
+      user.id,
+      pagination,
+    );
+    return new BaseResponse(
+      sportFields,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+    );
+  }
+
   @Get()
   async getSportFields(
     @PaginationParams() pagination: Pagination,
-    @FilteringParams(['name', 'startTime', 'endTime', 'phone', 'rule'])
+    @FilteringParams([
+      'name',
+      'startTime',
+      'endTime',
+      'phone',
+      'rule',
+      'ownerId',
+    ])
     filtering?: Filtering,
   ): Promise<BaseResponse> {
     const sportFields = await this.sportFieldService.getSportFields(

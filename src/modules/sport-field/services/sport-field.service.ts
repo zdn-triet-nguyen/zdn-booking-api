@@ -18,6 +18,8 @@ import { CreateSportFieldImageDto } from '../dto/sport-field-image/create-sport-
 import { UploadImageDto } from 'src/common/dto/upload-image.dto';
 import { CreateFieldDto } from 'src/modules/field/dto/create-field.dto';
 import { Pagination } from 'src/decorators/pagination.decorator';
+import { getWhere } from 'src/helpers/typeorm.helper';
+import { Filtering } from 'src/decorators/filter.decorator';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -33,12 +35,14 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     super(sportFieldRepository);
   }
 
-  async getSportFields({
-    limit,
-    offset,
-  }: Pagination): Promise<ReadSportFieldDto[]> {
+  async getSportFields(
+    { limit, offset }: Pagination,
+    filter?: Filtering,
+  ): Promise<ReadSportFieldDto[]> {
+    const where = getWhere(filter);
     const sportFields: SportFieldEntity[] =
       await this.sportFieldRepository.find({
+        where,
         take: limit,
         skip: offset,
       });

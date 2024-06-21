@@ -37,6 +37,7 @@ import {
   Pagination,
   PaginationParams,
 } from 'src/decorators/pagination.decorator';
+import { Filtering, FilteringParams } from 'src/decorators/filter.decorator';
 
 @ApiTags('sport-field')
 @Controller('sport-field')
@@ -137,8 +138,13 @@ export class SportFieldController {
   @Get()
   async getSportFields(
     @PaginationParams() pagination: Pagination,
+    @FilteringParams(['name', 'startTime', 'endTime', 'phone', 'rule'])
+    filtering?: Filtering,
   ): Promise<BaseResponse> {
-    const sportFields = await this.sportFieldService.getSportFields(pagination);
+    const sportFields = await this.sportFieldService.getSportFields(
+      pagination,
+      filtering,
+    );
     return new BaseResponse(
       sportFields,
       'sport_field_found',

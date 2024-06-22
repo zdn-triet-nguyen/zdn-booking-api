@@ -45,6 +45,10 @@ export class SportFieldEntity extends BaseEntity {
   rule: string;
 
   @AutoMap()
+  @Column('uuid', { name: 'sport_field_type_id', nullable: false })
+  sportFieldTypeId: string;
+
+  @AutoMap()
   @ManyToOne(
     () => SportFieldTypeEntity,
     (sportFieldType) => sportFieldType.sportFields,

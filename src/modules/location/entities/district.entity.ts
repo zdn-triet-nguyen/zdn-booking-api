@@ -9,8 +9,8 @@ export class DistrictEntity {
   @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'text' })
-  province_id: string;
+  @Column({ type: 'text', name: 'province_id' })
+  provinceId: string;
 
   @OneToMany(() => LocationEntity, (location) => location.district)
   locations: LocationEntity[];

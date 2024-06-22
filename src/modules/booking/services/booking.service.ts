@@ -8,7 +8,7 @@ import { FieldEntity } from 'src/modules/field/entities/field.entity';
 import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
 import { UpdateStatusBookingDto } from '../dto/update-status-booking.dto';
 import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { ReadBookingDto } from '../dto/read-booking.dto';
 import { BookingEntity, BookingStatus } from '../entities/booking.entity';
@@ -64,7 +64,7 @@ export class BookingService extends BaseService<BookingEntity> {
   remove(id: number) {
     return `This action removes a #${id} booking`;
   }
-  async removeBookingOfSportField(id: string) {
+  async removeBookingOfSportField(id: string, user: ReadUserDTO) {
     const sportField = await this.sportFieldRepository.find({
       where: { id: id },
     });
@@ -74,6 +74,14 @@ export class BookingService extends BaseService<BookingEntity> {
         statusCode: 404,
         status: 'Error',
         message: 'Sport field not exists',
+      };
+    }
+    if (sportField[0].createdBy !== user.id) {
+      return {
+        statusCode: 403,
+        status: 'Error',
+        message:
+          'You do not have permission to delete  bookings of this  sport field',
       };
     }
     // const a = await this.bookingRepository
@@ -88,6 +96,7 @@ export class BookingService extends BaseService<BookingEntity> {
       where: { sportField: { id: id } },
     });
     const fieldIds = fields.map((field) => field.id);
+    console.log(fieldIds);
     await this.bookingRepository
       .createQueryBuilder()
       .delete()
@@ -99,6 +108,28 @@ export class BookingService extends BaseService<BookingEntity> {
       status: 'Success',
       message: 'Deleted successfully',
     };
+  }
+
+  async getBookingsBySportFieldId(id: string) {
+    const sportField = await this.sportFieldRepository.findOne({
+      where: { id: id },
+    });
+    if (!sportField) {
+      return {
+        statusCode: 404,
+        status: 'Error',
+        message: 'Sport field not exists',
+      };
+    }
+    const fields = await this.fieldRepository.find({
+      where: { sportField: { id: id } },
+    });
+    const fieldIds = fields.map((field) => field.id);
+    const bookings = await this.bookingRepository.find({
+      where: { field: { id: In(fieldIds) } },
+    });
+    console.log(bookings);
+    return bookings;
   }
   async updateStatusBooking(id: string, data: UpdateStatusBookingDto) {
     const booking = await this.bookingRepository.findOne({

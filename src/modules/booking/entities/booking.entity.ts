@@ -24,6 +24,10 @@ export class BookingEntity extends BaseEntity {
   fullName: string;
 
   @AutoMap()
+  @Column('uuid', { name: 'field_id' })
+  fieldId: string;
+
+  @AutoMap()
   @ManyToOne(() => FieldEntity, (field) => field.bookings, { nullable: false })
   @JoinColumn({ name: 'field_id' })
   field: FieldEntity;

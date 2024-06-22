@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { API_BEARER_AUTH } from 'src/constants/constants';
@@ -33,6 +34,11 @@ import {
   RemoveSportFieldImageEvent,
   UpdateLocationEvent,
 } from '../events/sport-field-events.event';
+import {
+  Pagination,
+  PaginationParams,
+} from 'src/decorators/pagination.decorator';
+import { Filtering, FilteringParams } from 'src/decorators/filter.decorator';
 import { User } from 'src/decorators/user.decorator';
 import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 
@@ -134,6 +140,52 @@ export class SportFieldController {
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  @Get('me')
+  async getUserSportFields(
+    @User() user: ReadUserDTO,
+    @PaginationParams() pagination: Pagination,
+    @Query('sportFieldTypeId') sportFieldTypeId?: string,
+  ): Promise<BaseResponse> {
+    const sportFields = await this.sportFieldService.getUserSportFields(
+      user.id,
+      pagination,
+      sportFieldTypeId,
+    );
+    return new BaseResponse(
+      sportFields,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+    );
+  }
+
+  @Get()
+  async getSportFields(
+    @PaginationParams() pagination: Pagination,
+    @FilteringParams([
+      'name',
+      'startTime',
+      'endTime',
+      'phone',
+      'rule',
+      'ownerId',
+    ])
+    filtering?: Filtering,
+    @Query('sportFieldTypeId') sportFieldTypeId?: string,
+  ): Promise<BaseResponse> {
+    const sportFields = await this.sportFieldService.getSportFields(
+      pagination,
+      filtering,
+      sportFieldTypeId,
+    );
+    return new BaseResponse(
+      sportFields,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+    );
   }
 
   @Get(':id')

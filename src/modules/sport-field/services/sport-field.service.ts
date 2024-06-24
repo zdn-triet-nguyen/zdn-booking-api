@@ -40,11 +40,16 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     userId: string,
     { limit, offset }: Pagination,
     sportFieldTypeId?: string,
-  ): Promise<ReadSportFieldDto[]> {
+  ): Promise<GetSportFieldDto[]> {
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
     const sportFields: SportFieldEntity[] =
       await this.sportFieldRepository.find({
         where: { ownerId: userId, sportFieldType },
+        relations: {
+          sportFieldImages: true,
+          location: true,
+          sportFieldType: true,
+        },
         take: limit,
         skip: offset,
       });
@@ -52,7 +57,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     return this.mapper.mapArray(
       sportFields,
       SportFieldEntity,
-      ReadSportFieldDto,
+      GetSportFieldDto,
     );
   }
 
@@ -60,7 +65,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     { limit, offset }: Pagination,
     filter?: Filtering,
     sportFieldTypeId?: string,
-  ): Promise<ReadSportFieldDto[]> {
+  ): Promise<GetSportFieldDto[]> {
     const where = getWhere(filter);
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
 
@@ -77,7 +82,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     return this.mapper.mapArray(
       sportFields,
       SportFieldEntity,
-      ReadSportFieldDto,
+      GetSportFieldDto,
     );
   }
 

@@ -1,25 +1,22 @@
 import { FieldService } from './../../field/services/field.service';
 import { LocationService } from './../../location/location.service';
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
 
 import { BaseService } from 'src/common/service/base.service';
-import { CreateSportFieldDto } from '../dto/create-sport-field.dto';
-import { UpdateSportFieldDto } from '../dto/update-sport-field.dto';
-import { SportFieldEntity } from '../entities/sport-field.entity';
-import { ReadSportFieldDto } from '../dto/read-sport-field.dto';
-import { SportFieldImageService } from './sport-field-image/sport-field-image.service';
-import { CreateLocationDto } from 'src/modules/location/dto/create-location.dto';
-import { CreateSportFieldImageDto } from '../dto/sport-field-image/create-sport-field-image.dto';
-import { UploadImageDto } from 'src/common/dto/upload-image.dto';
-import { CreateFieldDto } from 'src/modules/field/dto/create-field.dto';
+import { Filtering } from 'src/decorators/filter.decorator';
 import { Pagination } from 'src/decorators/pagination.decorator';
 import { getWhere } from 'src/helpers/typeorm.helper';
-import { Filtering } from 'src/decorators/filter.decorator';
+import { CreateSportFieldDto } from '../dto/create-sport-field.dto';
+import { ReadSportFieldDto } from '../dto/read-sport-field.dto';
+import { UpdateSportFieldDto } from '../dto/update-sport-field.dto';
+import { SportFieldEntity } from '../entities/sport-field.entity';
+import { SportFieldImageService } from './sport-field-image/sport-field-image.service';
+import { GetSportFieldDto } from '../dto/get-sport-field.dto';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -101,9 +98,18 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     );
   }
 
-  async findSportFieldById(id: string): Promise<ReadSportFieldDto> {
-    const sportField: SportFieldEntity = await this.findOne({ where: { id } });
-    return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
+  async findSportFieldById(id: string): Promise<GetSportFieldDto> {
+    const sportField: SportFieldEntity = await this.findOne({
+      where: { id },
+      relations: {
+        sportFieldImages: true,
+        location: true,
+        sportFieldType: true,
+      },
+    });
+
+    console.log(sportField);
+    return this.mapper.map(sportField, SportFieldEntity, GetSportFieldDto);
   }
 
   async updateSportField(

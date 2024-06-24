@@ -184,17 +184,17 @@ export class SportFieldController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<BaseResponse> {
+  async findOne(@Param('id') id: string): Promise<any> {
     const sportField = await this.sportFieldService.findSportFieldById(id);
     if (!sportField) {
       throw new BadRequestException('sport_field_not_found');
     }
-    return new BaseResponse(
-      [sportField],
-      'sport_field_found',
-      200,
-      new Date().toString(),
-    );
+    console.log(sportField);
+    return {
+      statusCode: 200,
+      message: 'Success',
+      sportField,
+    };
   }
 
   @Patch(':id')

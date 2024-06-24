@@ -36,8 +36,6 @@ export class AuthService {
     await this.populateEmailIfPhoneProvided(signInDto);
 
     const formData = this.createSignInFormData(signInDto);
-    console.log(formData);
-
     try {
       const response = await this.requestKeycloakToken(formData);
 
@@ -86,7 +84,7 @@ export class AuthService {
 
   async signUp(createAuthDto: CreateAuthDto) {
     const { name, email, phone, password, role, accountType } = createAuthDto;
-    const userExist = await this.userService.findOne({
+    const userExist = await this.userRepository.findOne({
       where: [{ phone: phone }, { email: email }],
     });
     if (userExist) {

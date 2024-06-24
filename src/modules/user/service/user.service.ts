@@ -17,7 +17,6 @@ export class UserService extends BaseService<UserEntity> {
     private readonly classMapper: Mapper,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-
     private readonly keycloakService: KeycloakService,
   ) {
     super(userRepository);

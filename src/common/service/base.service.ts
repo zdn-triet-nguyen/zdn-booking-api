@@ -17,7 +17,7 @@ export abstract class BaseService<T> {
 
   async findOne(options: FindOneOptions<T>): Promise<T> {
     try {
-      return await this.repository.findOneOrFail(options);
+      return await this.repository.findOne(options);
     } catch (error: any) {
       throw new NotFoundException(error.message);
     }

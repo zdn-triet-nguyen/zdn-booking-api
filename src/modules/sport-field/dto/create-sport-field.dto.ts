@@ -58,7 +58,7 @@ export class CreateSportFieldDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  sportFieldType: string;
+  sportFieldTypeId: string;
 
   @AutoMap()
   @ApiProperty()

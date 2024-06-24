@@ -10,7 +10,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Public } from 'nest-keycloak-connect';
 
 import { API_BEARER_AUTH } from 'src/constants/constants';
 import { FieldService } from './../services/field.service';
@@ -20,10 +19,11 @@ import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
 import { ReadFieldDto } from '../dto/read-field.dto';
 import { BaseResponse } from 'src/common/response/base.response';
+import { User } from 'src/decorators/user.decorator';
+import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 
 @ApiTags('field')
 @ApiBearerAuth(API_BEARER_AUTH)
-@Public()
 @Controller('field')
 export class FieldController {
   constructor(private readonly fieldService: FieldService) {}
@@ -46,7 +46,8 @@ export class FieldController {
   }
 
   @Get()
-  async findAll(): Promise<BaseResponse> {
+  async findAll(@User() user: ReadUserDTO): Promise<BaseResponse> {
+    console.log(user);
     const fields = await this.fieldService.findAll();
 
     if (!fields) {
@@ -100,7 +101,9 @@ export class FieldController {
   async update(
     @Param('id') id: string,
     @Body() updateFieldDto: Partial<UpdateFieldDto>,
+    @User() user: ReadUserDTO,
   ): Promise<BaseResponse> {
+    updateFieldDto.updatedBy = user.id;
     const field: ReadFieldDto = await this.fieldService.updateField(
       id,
       updateFieldDto,

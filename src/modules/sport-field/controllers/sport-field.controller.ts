@@ -56,8 +56,13 @@ export class SportFieldController {
 
   @Post()
   async createSportField(
-    @Body() createSportFieldDto: CreateSportFieldDto,
+    @Body() createSportFieldDto: any,
+    @User() user: any,
   ): Promise<BaseResponse> {
+    createSportFieldDto.createdBy = user.id;
+    createSportFieldDto.ownerId = user.id;
+    console.log('user', user);
+    console.log('createSportFieldDto', createSportFieldDto);
     try {
       const res =
         await this.sportFieldService.createSportField(createSportFieldDto);

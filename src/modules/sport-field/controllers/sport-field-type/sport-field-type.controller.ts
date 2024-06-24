@@ -1,4 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'nest-keycloak-connect';
 
@@ -22,17 +29,26 @@ export class SportFieldTypeController {
       createSportFieldTypeDto,
     );
     if (!res) {
-      return new BaseResponse(
-        [],
-        'sport_field_type_not_created',
-        400,
-        new Date().toString(),
-      );
+      throw new BadRequestException('sport_field_type_not_created');
     }
     return new BaseResponse(
       [res],
       'sport_field_type_created',
       201,
+      new Date().toString(),
+    );
+  }
+
+  @Get()
+  async getAllSportFieldType(): Promise<BaseResponse> {
+    const res = await this.sportFieldTypeSerive.findAllSportFieldType();
+    if (!res) {
+      throw new NotFoundException('sport_field_type_not_found');
+    }
+    return new BaseResponse(
+      res,
+      'sport_field_type_found',
+      200,
       new Date().toString(),
     );
   }

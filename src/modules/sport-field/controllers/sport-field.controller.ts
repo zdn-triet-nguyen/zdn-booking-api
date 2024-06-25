@@ -42,6 +42,8 @@ import { Filtering, FilteringParams } from 'src/decorators/filter.decorator';
 import { User } from 'src/decorators/user.decorator';
 import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 import { create } from 'domain';
+import { ReadSportFieldDto } from '../dto/read-sport-field.dto';
+import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
 
 @ApiTags('sport-field')
 @Controller('sport-field')
@@ -57,13 +59,17 @@ export class SportFieldController {
 
   @Post()
   async createSportField(
-    @Body() createSportFieldDto: CreateSportFieldDto,
+    @Body() createSportFieldDto: UpdateSportFieldDto,
     @User() user: any,
-  ): Promise<BaseResponse> {
+  ): Promise<BaseResponse<ReadSportFieldDto>> {
+    console.log(createSportFieldDto);
+
     createSportFieldDto.createdBy = user.id;
-    createSportFieldDto.ownerId = user.id;
-    console.log('user', user);
-    console.log('createSportFieldDto', createSportFieldDto);
+    if (!createSportFieldDto.ownerId) {
+      createSportFieldDto.ownerId = user.id;
+    }
+
+    console.log(createSportFieldDto);
     try {
       const res =
         await this.sportFieldService.createSportField(createSportFieldDto);
@@ -99,43 +105,6 @@ export class SportFieldController {
         );
       }
 
-      // for (let i = 0; i < createSportFieldDto.quantity; i++) {
-      //   const field: CreateFieldDto = {
-      //     name: `${res.name} - ${i + 1}`,
-      //     sportFieldId: res.id,
-      //     createdBy: res.createdBy,
-      //   };
-      //   const fieldCreated = await this.fieldService.createField(field);
-      //   if (!fieldCreated) {
-      //     throw new BadRequestException('field_not_created');
-      //   }
-      // }
-
-      // for (const image of createSportFieldDto.sportFieldImages) {
-      //   const sportFieldImage: CreateSportFieldImageDto = {
-      //     sportField: res.id,
-      //     ...image,
-      //     createdBy: res.createdBy,
-      //   };
-      //   const imageCreated =
-      //     await this.sportFieldImageService.createSportFieldImage(
-      //       sportFieldImage,
-      //     );
-      //   if (!imageCreated) {
-      //     throw new BadRequestException('image_not_created');
-      //   }
-      // }
-
-      // if (createSportFieldDto.locationObj) {
-      //   const location = await this.locationService.create({
-      //     sportFieldId: res.id,
-      //     ...(createSportFieldDto.locationObj as CreateLocationDto),
-      //   });
-      //   if (!location) {
-      //     throw new BadRequestException('location_not_created');
-      //   }
-      // }
-
       return new BaseResponse(
         [res],
         'sport_field_created',
@@ -152,7 +121,7 @@ export class SportFieldController {
     @User() user: ReadUserDTO,
     @PaginationParams() pagination: Pagination,
     @Query('sportFieldTypeId') sportFieldTypeId?: string,
-  ): Promise<BaseResponse> {
+  ): Promise<BaseResponse<ReadSportFieldDto>> {
     const sportFields = await this.sportFieldService.getUserSportFields(
       user.id,
       pagination,
@@ -179,7 +148,7 @@ export class SportFieldController {
     ])
     filtering?: Filtering,
     @Query('sportFieldTypeId') sportFieldTypeId?: string,
-  ): Promise<BaseResponse> {
+  ): Promise<BaseResponse<ReadSportFieldDto>> {
     const sportFields = await this.sportFieldService.getSportFields(
       pagination,
       filtering,
@@ -194,13 +163,13 @@ export class SportFieldController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<BaseResponse> {
+  async findOne(@Param('id') id: string): Promise<any> {
     const sportField = await this.sportFieldService.findSportFieldById(id);
     if (!sportField) {
       throw new BadRequestException('sport_field_not_found');
     }
     return new BaseResponse(
-      [sportField],
+      sportField,
       'sport_field_found',
       200,
       new Date().toString(),
@@ -219,12 +188,10 @@ export class SportFieldController {
 
     if (updateSportFieldDto.location) {
       if (updateSportFieldDto.location.id) {
+        const { id, ...location } = updateSportFieldDto.location;
         this.eventEmitter.emit(
           'update.location',
-          new UpdateLocationEvent(
-            updateSportFieldDto.location.id,
-            updateSportFieldDto.location,
-          ),
+          new UpdateLocationEvent(id, location),
         );
       } else {
         this.eventEmitter.emit(

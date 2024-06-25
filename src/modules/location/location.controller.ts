@@ -15,6 +15,10 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 import { LocationService } from './location.service';
 import { Roles } from 'nest-keycloak-connect';
 import { BaseResponse } from 'src/common/response/base.response';
+import { LocationEntity } from './entities/location.entity';
+import { WardEntity } from './entities/ward.entity';
+import { DistrictEntity } from './entities/district.entity';
+import { ProvinceEntity } from './entities/province.entity';
 @ApiTags('location')
 @Controller('location')
 @ApiBearerAuth(API_BEARER_AUTH)
@@ -24,13 +28,13 @@ export class LocationController {
   @Post()
   async create(
     @Body() createLocationDto: CreateLocationDto,
-  ): Promise<BaseResponse> {
+  ): Promise<BaseResponse<LocationEntity>> {
     const res = this.locationService.create(createLocationDto);
     if (!res) {
       throw new BadRequestException('location_not_created');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_created',
       201,
       new Date().toString(),
@@ -41,13 +45,13 @@ export class LocationController {
   @Roles({
     roles: [ROLE.OWNER],
   })
-  async findAll(): Promise<BaseResponse> {
+  async findAll(): Promise<BaseResponse<LocationEntity>> {
     const res = await this.locationService.findAll();
     if (!res) {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -55,7 +59,7 @@ export class LocationController {
   }
 
   @Get('provinces')
-  async findAllProvince(): Promise<BaseResponse> {
+  async findAllProvince(): Promise<BaseResponse<ProvinceEntity>> {
     const res = await this.locationService.findAllProvince();
     if (!res) {
       throw new BadRequestException('location_not_retrieved');
@@ -69,7 +73,7 @@ export class LocationController {
   }
 
   @Get('districts')
-  async findAllDistrict(): Promise<BaseResponse> {
+  async findAllDistrict(): Promise<BaseResponse<DistrictEntity>> {
     const res = await this.locationService.findAllDistrict();
     if (!res) {
       throw new BadRequestException('location_not_retrieved');
@@ -97,7 +101,9 @@ export class LocationController {
   }
 
   @Get('province/:id')
-  async findByProvince(@Param('id') id: string): Promise<BaseResponse> {
+  async findByProvince(
+    @Param('id') id: string,
+  ): Promise<BaseResponse<ProvinceEntity>> {
     const res = await this.locationService.findByProvince(id);
     if (!res) {
       throw new BadRequestException('location_not_retrieved');
@@ -111,7 +117,9 @@ export class LocationController {
   }
 
   @Get('district/:id')
-  async findByDistrict(@Param('id') id: string): Promise<BaseResponse> {
+  async findByDistrict(
+    @Param('id') id: string,
+  ): Promise<BaseResponse<DistrictEntity>> {
     const res = await this.locationService.findByDistrict(id);
     if (!res) {
       throw new BadRequestException('location_not_retrieved');
@@ -125,7 +133,7 @@ export class LocationController {
   }
 
   @Get('ward/:id')
-  async findByWard(@Param('id') id: string): Promise<BaseResponse> {
+  async findByWard(@Param('id') id: string): Promise<BaseResponse<WardEntity>> {
     const res = await this.locationService.findByWard(id);
     if (!res) {
       throw new BadRequestException('location_not_retrieved');
@@ -142,13 +150,13 @@ export class LocationController {
   async update(
     @Param('id') id: string,
     @Body() updateLocationDto: Partial<UpdateLocationDto>,
-  ): Promise<BaseResponse> {
+  ): Promise<BaseResponse<LocationEntity>> {
     const res = await this.locationService.update(id, updateLocationDto);
     if (!res) {
       throw new BadRequestException('location_not_updated');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_updated',
       200,
       new Date().toString(),
@@ -156,13 +164,13 @@ export class LocationController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<BaseResponse> {
+  async remove(@Param('id') id: string): Promise<BaseResponse<string>> {
     const res = await this.locationService.remove(id);
     if (!res) {
       throw new BadRequestException('location_not_removed');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_removed',
       200,
       new Date().toString(),
@@ -170,16 +178,13 @@ export class LocationController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<BaseResponse> {
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<BaseResponse<LocationEntity>> {
     const res = await this.locationService.findOne(id);
     if (!res) {
       throw new BadRequestException('location_not_found');
     }
-    return new BaseResponse(
-      [res],
-      'location_found',
-      200,
-      new Date().toString(),
-    );
+    return new BaseResponse(res, 'location_found', 200, new Date().toString());
   }
 }

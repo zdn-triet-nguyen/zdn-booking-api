@@ -67,7 +67,7 @@ export class LocationService {
 
   async findAll() {
     const res = await this.locationRepository.find();
-    return res ? res : 'No location found!';
+    return res ? res : null;
   }
 
   async findOne(id: string) {
@@ -80,17 +80,17 @@ export class LocationService {
   }
 
   async update(id: string, updateLocationDto: Partial<UpdateLocationDto>) {
-    const entity = this.classMapper.map(
-      updateLocationDto,
-      UpdateLocationDto,
-      LocationEntity,
-    );
+    // const entity = this.classMapper.map(
+    //   updateLocationDto,
+    //   UpdateLocationDto,
+    //   LocationEntity,
+    // );
 
     const res = await this.locationRepository.update(
       {
         id: id,
       },
-      entity,
+      updateLocationDto,
     );
 
     return res.affected > 0

@@ -41,6 +41,23 @@ export class SportFieldProfile extends AutomapperProfile {
       );
       createMap(mapper, CreateSportFieldDto, SportFieldEntity);
       createMap(mapper, UpdateSportFieldDto, SportFieldEntity);
+      createMap(
+        mapper,
+        SportFieldEntity,
+        GetSportFieldDto,
+        forMember(
+          (destination) => destination.sportFieldType,
+          mapFrom((source) => source.sportFieldType),
+        ),
+        forMember(
+          (destination) => destination.sportFieldImages,
+          mapFrom((source) => source.sportFieldImages),
+        ),
+        forMember(
+          (destination) => destination.location,
+          mapFrom((source) => source.location),
+        ),
+      );
     };
   }
 }

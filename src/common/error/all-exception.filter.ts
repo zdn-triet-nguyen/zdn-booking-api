@@ -14,7 +14,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest();
 
     // Handle any exception
-    const message = exception.getResponse().message || exception.getResponse();
+    const message =
+      response.message || exception instanceof Error
+        ? exception.message
+        : 'Internal server error.';
 
     const exceptionResponse = new BaseResponse(
       null,

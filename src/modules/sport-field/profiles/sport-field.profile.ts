@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { Mapper, createMap } from '@automapper/core';
+import { Mapper, createMap, forMember, mapFrom } from '@automapper/core';
 import { SportFieldEntity } from '../entities/sport-field.entity';
 import { ReadSportFieldDto } from '../dto/read-sport-field.dto';
 import { CreateSportFieldDto } from '../dto/create-sport-field.dto';
@@ -14,7 +14,30 @@ export class SportFieldProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, SportFieldEntity, ReadSportFieldDto);
+      createMap(
+        mapper,
+        SportFieldEntity,
+        ReadSportFieldDto,
+        forMember(
+          (destination) => destination.fieldIds,
+          mapFrom((source) =>
+            source.fields?.map((field) => {
+              if (field instanceof Object) {
+                return field.id;
+              }
+              return field;
+            }),
+          ),
+        ),
+        forMember(
+          (destination) => destination.sportFieldImages,
+          mapFrom((source) => source.sportFieldImages),
+        ),
+        forMember(
+          (destination) => destination.location,
+          mapFrom((source) => source.location),
+        ),
+      );
       createMap(mapper, CreateSportFieldDto, SportFieldEntity);
       createMap(mapper, UpdateSportFieldDto, SportFieldEntity);
     };

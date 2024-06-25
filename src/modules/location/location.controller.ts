@@ -61,7 +61,7 @@ export class LocationController {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -75,7 +75,7 @@ export class LocationController {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -89,7 +89,7 @@ export class LocationController {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -103,7 +103,7 @@ export class LocationController {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -117,7 +117,7 @@ export class LocationController {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -131,7 +131,7 @@ export class LocationController {
       throw new BadRequestException('location_not_retrieved');
     }
     return new BaseResponse(
-      [res],
+      res,
       'location_retrieved',
       200,
       new Date().toString(),
@@ -141,7 +141,7 @@ export class LocationController {
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateLocationDto: UpdateLocationDto,
+    @Body() updateLocationDto: Partial<UpdateLocationDto>,
   ): Promise<BaseResponse> {
     const res = await this.locationService.update(id, updateLocationDto);
     if (!res) {

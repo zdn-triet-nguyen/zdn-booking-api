@@ -102,7 +102,10 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
   }
 
   async findSportFieldById(id: string): Promise<ReadSportFieldDto> {
-    const sportField: SportFieldEntity = await this.findOne({ where: { id } });
+    const sportField: SportFieldEntity = await this.findOne({
+      where: { id },
+      relations: ['fields', 'location', 'sportFieldType', 'sportFieldImages'],
+    });
     return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
   }
 

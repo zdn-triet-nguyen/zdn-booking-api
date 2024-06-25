@@ -41,6 +41,7 @@ import {
 import { Filtering, FilteringParams } from 'src/decorators/filter.decorator';
 import { User } from 'src/decorators/user.decorator';
 import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { create } from 'domain';
 
 @ApiTags('sport-field')
 @Controller('sport-field')
@@ -56,7 +57,7 @@ export class SportFieldController {
 
   @Post()
   async createSportField(
-    @Body() createSportFieldDto: any,
+    @Body() createSportFieldDto: CreateSportFieldDto,
     @User() user: any,
   ): Promise<BaseResponse> {
     createSportFieldDto.createdBy = user.id;
@@ -71,10 +72,14 @@ export class SportFieldController {
       }
 
       // Emit event for location creation if locationObj is provided
-      if (createSportFieldDto.locationObj) {
+      if (createSportFieldDto.location) {
         this.eventEmitter.emit(
           'create.location',
-          new CreateLocationEvent(res.id, createSportFieldDto.locationObj),
+          new CreateLocationEvent(
+            res.id,
+            createSportFieldDto.location,
+            res.createdBy,
+          ),
         );
       }
 
@@ -207,21 +212,37 @@ export class SportFieldController {
     @Param('id') id: string,
     @Body() updateSportFieldDto: Partial<UpdateSportFieldDto>,
   ) {
-    if (updateSportFieldDto.locationObj) {
-      this.eventEmitter.emit(
-        'create.location',
-        new UpdateLocationEvent(
-          updateSportFieldDto.locationObj.id,
-          updateSportFieldDto.locationObj,
-        ),
-      );
+    const res = await this.sportFieldService.updateSportField(
+      id,
+      updateSportFieldDto,
+    );
+
+    if (updateSportFieldDto.location) {
+      if (updateSportFieldDto.location.id) {
+        this.eventEmitter.emit(
+          'update.location',
+          new UpdateLocationEvent(
+            updateSportFieldDto.location.id,
+            updateSportFieldDto.location,
+          ),
+        );
+      } else {
+        this.eventEmitter.emit(
+          'create.location',
+          new CreateLocationEvent(
+            id,
+            updateSportFieldDto.location,
+            res.createdBy,
+          ),
+        );
+      }
     }
 
     if (updateSportFieldDto.sportFieldImages) {
       updateSportFieldDto.sportFieldImages.forEach((image) => {
         this.eventEmitter.emit(
           'create.sportFieldImage',
-          new CreateSportFieldImageEvent(id, image, 'system'),
+          new CreateSportFieldImageEvent(id, image, res.createdBy),
         );
       });
     }
@@ -235,10 +256,6 @@ export class SportFieldController {
       });
     }
 
-    const res = await this.sportFieldService.updateSportField(
-      id,
-      updateSportFieldDto,
-    );
     if (!res) {
       throw new BadRequestException('sport_field_not_updated');
     }

@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/service/base.service';
 import { FieldEntity } from 'src/modules/field/entities/field.entity';
@@ -61,14 +65,38 @@ export class BookingService extends BaseService<BookingEntity> {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} booking`;
+  async remove(id: string, user: ReadUserDTO) {
+    const booking = await this.bookingRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        field: true,
+      },
+    });
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+    if (booking.field.createdBy !== user.id) {
+      throw new UnauthorizedException(
+        'You do not have permission to delete this booking',
+      );
+    }
+    booking.deletedBy = user.id;
+    await this.bookingRepository.save(booking);
+    await this.bookingRepository.softDelete(id);
+
+    return {
+      statusCode: 200,
+      status: 'Success',
+      message: 'Deleted successfully',
+    };
   }
   async removeBookingOfSportField(id: string, user: ReadUserDTO) {
     const sportField = await this.sportFieldRepository.find({
       where: { id: id },
     });
-    console.log('123zczx', sportField);
+
     if (sportField.length === 0) {
       return {
         statusCode: 404,
@@ -128,18 +156,34 @@ export class BookingService extends BaseService<BookingEntity> {
     const bookings = await this.bookingRepository.find({
       where: { field: { id: In(fieldIds) } },
     });
-    console.log(bookings);
+
     return bookings;
   }
-  async updateStatusBooking(id: string, data: UpdateStatusBookingDto) {
+  async updateStatusBooking(
+    id: string,
+    data: UpdateStatusBookingDto,
+    user: ReadUserDTO,
+  ) {
     const booking = await this.bookingRepository.findOne({
-      where: { id: id },
+      where: {
+        id,
+      },
+      relations: {
+        field: true,
+      },
     });
     if (!booking) {
       return {
         statusCode: 404,
         status: 'Error',
         message: 'Booking not exists',
+      };
+    }
+    if (booking.field.createdBy !== user.id) {
+      return {
+        statusCode: 403,
+        status: 'Error',
+        message: 'You do not have permission to update this booking',
       };
     }
     await this.bookingRepository.update(id, data);

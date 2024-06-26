@@ -17,6 +17,7 @@ import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { BookingService } from '../services/booking.service';
 import { ReadBookingDto } from '../dto/read-booking.dto';
+import { ReadBookingDateDTO } from '../dto/read-booking-date.dto';
 
 @Controller('booking')
 @ApiBearerAuth(API_BEARER_AUTH)
@@ -51,6 +52,13 @@ export class BookingController {
   @Get('/bookings-sports-field/:id')
   getBookingSportField(@Param('id') id: string) {
     return this.bookingService.getBookingsBySportFieldId(id);
+  }
+  @Get('/bookings-calendar-sport-field/:id')
+  getBookingCalendar(
+    @Param('id') id: string,
+    @Body() readBookingDateDto: ReadBookingDateDTO,
+  ) {
+    return this.bookingService.getBookingsCalendar(id, readBookingDateDto);
   }
   @Delete(':id')
   removeBooking(@Param('id') id: string, @User() user: ReadUserDTO) {

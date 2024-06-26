@@ -18,7 +18,7 @@ import {
   In,
   LessThanOrEqual,
   MoreThanOrEqual,
-  Repository,
+  Not, Repository,
   SelectQueryBuilder,
 } from 'typeorm';
 import { CreateBookingDto } from '../dto/create-booking.dto';
@@ -27,6 +27,8 @@ import { BookingEntity, BookingStatus } from '../entities/booking.entity';
 import { ReadOwnerBookingDto } from '../dto/read-owner-booking.dto';
 import { DateTimeHelper } from 'src/helpers/datetime.helper';
 import { CreateOwnerBookingDto } from '../dto/create-owner-booking.dto';
+import { ReadBookingDateDTO } from '../dto/read-booking-date.dto';
+import { ReadingBookingCalendar } from '../dto/read-booking-calendar';
 
 @Injectable()
 export class BookingService extends BaseService<BookingEntity> {
@@ -354,5 +356,59 @@ export class BookingService extends BaseService<BookingEntity> {
       status: 'Success',
       message: 'Updated successfully',
     };
+  }
+  async getBookingsCalendar(
+    id: string,
+    readBookingDateDto: ReadBookingDateDTO,
+  ): Promise<ReadingBookingCalendar[]> {
+    let currentTime = new Date(readBookingDateDto.startTime);
+    const endTime = new Date(readBookingDateDto.endTime);
+    const timeSlots = [];
+    while (currentTime < endTime) {
+      timeSlots.push(new Date(currentTime));
+      currentTime = new Date(currentTime.getTime() + 30 * 60000); // Thêm 30 phút
+    }
+
+    const fields = await this.fieldRepository.find({
+      where: { sportField: { id: id } },
+    });
+
+    const fieldIds = fields.map((field) => field.id);
+
+    const results = await Promise.all(
+      timeSlots.map(async (slot) => {
+        const bookings = await this.bookingRepository.find({
+          where: {
+            field: { id: In(fieldIds) },
+            status: BookingStatus.ACCEPTED,
+            startTime: LessThanOrEqual(slot),
+            endTime: MoreThanOrEqual(new Date(slot.getTime() + 30 * 60000)),
+          },
+        });
+
+        if (bookings.length === 0) {
+          return {
+            startTime: slot,
+            endTime: new Date(slot.getTime() + 30 * 60000),
+            isEmpty: true,
+          };
+        } else if (bookings.length === fields.length) {
+          console.log(bookings.length, fields.length);
+          return {
+            startTime: slot,
+            endTime: new Date(slot.getTime() + 30 * 60000),
+            isEmpty: false,
+          };
+        } else {
+          return {
+            startTime: slot,
+            endTime: new Date(slot.getTime() + 30 * 60000),
+            isEmpty: false,
+          };
+        }
+      }),
+    );
+
+    return results;
   }
 }

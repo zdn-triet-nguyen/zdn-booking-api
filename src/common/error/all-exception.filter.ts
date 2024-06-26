@@ -21,7 +21,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const exceptionResponse = new BaseResponse(
       null,
-      message,
+      exception?.response?.message || exception.message || message,
       exception instanceof HttpException ? exception.getStatus() : 500,
       new Date().toISOString(),
     );

@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateStatusBookingDto } from '../dto/update-status-booking.dto';
@@ -17,6 +19,8 @@ import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { BookingService } from '../services/booking.service';
 import { ReadBookingDto } from '../dto/read-booking.dto';
+import { ReadOwnerBookingDto } from '../dto/read-owner-booking.dto';
+import { CreateOwnerBookingDto } from '../dto/create-owner-booking.dto';
 
 @Controller('booking')
 @ApiBearerAuth(API_BEARER_AUTH)
@@ -44,10 +48,35 @@ export class BookingController {
     return this.bookingService.createBooking(user, createBookingDto);
   }
 
-  @Get()
-  getBookings(@Body() readBookingDto: ReadBookingDto) {
-    return this.bookingService.getBookings(readBookingDto);
+  @Post('owner')
+  createOwnerBooking(
+    @User() user: ReadUserDTO,
+    @Body() createOwnerBookingDto: CreateOwnerBookingDto,
+  ) {
+    return this.bookingService.createBookingByOwner(
+      user,
+      createOwnerBookingDto,
+    );
   }
+
+  @Get()
+  getBookingsByFieldId(
+    @User() user: ReadUserDTO,
+    @Query(new ValidationPipe({ transform: true }))
+    readBookingDto: ReadOwnerBookingDto,
+  ) {
+    return this.bookingService.getBookingsByFieldId(user, readBookingDto);
+  }
+
+  @Get('user')
+  getUserBookings(
+    @User() user: ReadUserDTO,
+    @Query(new ValidationPipe({ transform: true }))
+    readBookingDto: ReadBookingDto,
+  ) {
+    return this.bookingService.getUserBooking(user, readBookingDto);
+  }
+
   @Get('/bookings-sports-field/:id')
   getBookingSportField(@Param('id') id: string) {
     return this.bookingService.getBookingsBySportFieldId(id);

@@ -45,7 +45,7 @@ export class LocationEntity extends BaseEntity {
   ward: WardEntity;
 
   @AutoMap()
-  @Column({ name: 'address_detail', type: 'character varying', length: 64 })
+  @Column({ name: 'address_detail', type: 'character varying', length: 255 })
   addressDetail: string;
 
   @AutoMap()

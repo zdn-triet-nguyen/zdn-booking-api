@@ -59,6 +59,10 @@ export class BookingController {
       createOwnerBookingDto,
     );
   }
+  @Get(':id')
+  getBookingById(@Param('id') id: string) {
+    return this.bookingService.getBookingById(id);
+  }
 
   @Get()
   getBookingsByFieldId(

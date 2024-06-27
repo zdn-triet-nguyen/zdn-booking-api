@@ -418,4 +418,23 @@ export class BookingService extends BaseService<BookingEntity> {
 
     return results;
   }
+  async getBookingById(id: string) {
+    const booking = await this.bookingRepository.findOne({
+      where: { id: id },
+    });
+    console.log(123, booking);
+    if (!booking) {
+      return {
+        statusCode: 404,
+        status: 'Error',
+        message: 'Booking not exists',
+      };
+    }
+    return {
+      statusCode: 200,
+      status: 'Success',
+      message: 'Booking found',
+      data: booking,
+    };
+  }
 }

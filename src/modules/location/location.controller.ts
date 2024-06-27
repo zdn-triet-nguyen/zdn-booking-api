@@ -4,16 +4,19 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
+  Query,
+  Res,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { API_BEARER_AUTH, ROLE } from 'src/constants/constants';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { LocationService } from './location.service';
-import { Roles } from 'nest-keycloak-connect';
+import { Public, Roles } from 'nest-keycloak-connect';
 import { BaseResponse } from 'src/common/response/base.response';
 import { LocationEntity } from './entities/location.entity';
 import { WardEntity } from './entities/ward.entity';
@@ -24,6 +27,18 @@ import { ProvinceEntity } from './entities/province.entity';
 @ApiBearerAuth(API_BEARER_AUTH)
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
+
+  @Public()
+  @Get('location')
+  async getLocation(@Query('address') address: string, @Res() res) {
+    try {
+      const location =
+        await this.locationService.findLocationByAddress(address);
+      return res.status(HttpStatus.OK).json(location);
+    } catch (error: any) {
+      return res.status(error.getStatus()).json({ message: error.message });
+    }
+  }
 
   @Post()
   async create(

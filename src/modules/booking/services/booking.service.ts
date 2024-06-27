@@ -163,7 +163,7 @@ export class BookingService extends BaseService<BookingEntity> {
     });
     return await this.bookingRepository.save({
       ...bookingDetails,
-      status: BookingStatus.BOOKING,
+      status: createBookingDto.status ?? BookingStatus.BOOKING,
       field,
       fullName: createBookingDto.name,
       phoneNumber: createBookingDto.phone,

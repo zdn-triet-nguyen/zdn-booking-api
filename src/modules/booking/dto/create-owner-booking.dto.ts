@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber } from 'class-validator';
 import { CreateBookingDto } from './create-booking.dto';
+import { BookingStatus } from '../entities/booking.entity';
 
 export class CreateOwnerBookingDto extends CreateBookingDto {
   @IsPhoneNumber('VN')
@@ -8,4 +9,8 @@ export class CreateOwnerBookingDto extends CreateBookingDto {
 
   @IsNotEmpty()
   name: string;
+
+  @IsOptional()
+  @IsEnum(BookingStatus)
+  status: BookingStatus;
 }

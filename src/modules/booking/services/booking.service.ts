@@ -319,8 +319,11 @@ export class BookingService extends BaseService<BookingEntity> {
     const fieldIds = fields.map((field) => field.id);
     const bookings = await this.bookingRepository.find({
       where: { field: { id: In(fieldIds) } },
+      relations: {
+        field: true,
+      },
     });
-
+    console.log(bookings);
     return bookings;
   }
   async updateStatusBooking(

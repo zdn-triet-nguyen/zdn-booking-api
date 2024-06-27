@@ -75,6 +75,11 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
           ...where,
           sportFieldType,
         },
+        relations: {
+          sportFieldImages: true,
+          location: true,
+          sportFieldType: true,
+        },
         take: limit,
         skip: offset,
       });

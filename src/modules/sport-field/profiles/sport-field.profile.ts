@@ -38,6 +38,10 @@ export class SportFieldProfile extends AutomapperProfile {
           (destination) => destination.location,
           mapFrom((source) => source.location),
         ),
+        forMember(
+          (destination) => destination.fields,
+          mapFrom((source) => source.fields),
+        ),
       );
       createMap(mapper, CreateSportFieldDto, SportFieldEntity);
       createMap(mapper, UpdateSportFieldDto, SportFieldEntity);

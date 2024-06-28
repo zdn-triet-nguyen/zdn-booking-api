@@ -109,9 +109,9 @@ export class BookingService extends BaseService<BookingEntity> {
   }
 
   async validateBookingTime(fieldId: string, startTime: Date, endTime: Date) {
-    // if (await this.isBookingTimeInvalid(fieldId, startTime, endTime)) {
-    //   throw new BadRequestException('Invalid booking time');
-    // }
+    if (await this.isBookingTimeInvalid(fieldId, startTime, endTime)) {
+      throw new BadRequestException('Invalid booking time');
+    }
 
     if (await this.hasBookingTime(fieldId, startTime, endTime)) {
       throw new ConflictException('There is a booking at this time');
@@ -180,7 +180,7 @@ export class BookingService extends BaseService<BookingEntity> {
       where: { id: fieldId },
     });
 
-    this.validateFieldExists(fieldId);
+    await this.validateFieldExists(fieldId);
 
     if (field.createdBy !== userId) {
       throw new ForbiddenException(
@@ -229,7 +229,7 @@ export class BookingService extends BaseService<BookingEntity> {
     this.validateFieldAccess(user.id, readBookingDto.fieldId);
     const query = this.buildBaseQuery(readBookingDto);
     this.applyStatusFilter(query, readBookingDto.status);
-    return query.getMany();
+    return await query.getMany();
   }
 
   async getUserBooking(user: ReadUserDTO, readBookingDto: ReadBookingDto) {
@@ -239,6 +239,25 @@ export class BookingService extends BaseService<BookingEntity> {
     this.applyStatusFilter(query, readBookingDto.status);
 
     return query.getMany();
+  }
+
+  async getOwnerBooking(status: string): Promise<BookingEntity[]> {
+    // const bookings = this.bookingRepository.find({
+    //   where: { field.sportField.owner: owner.id },
+    //   relations: ['field', 'field.sportField'],
+    // });
+
+    const bookings = await this.bookingRepository.find({
+      where: { status: status },
+      relations: [
+        'field',
+        'field.sportField',
+        'field.sportField.sportFieldType',
+        'field.sportField.location',
+      ],
+    });
+    // return this.mapper(bookings, BookingEntity, ReadBookingDto);
+    return bookings;
   }
 
   async remove(id: string, user: ReadUserDTO) {
@@ -364,6 +383,46 @@ export class BookingService extends BaseService<BookingEntity> {
       message: 'Updated successfully',
     };
   }
+
+  async updateBooking(
+    id: string,
+    data: Partial<BookingEntity>,
+    user: ReadUserDTO,
+  ) {
+    const booking = await this.bookingRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['field', 'field.sportField'],
+    });
+    if (!booking) {
+      return {
+        statusCode: 404,
+        status: 'Error',
+        message: 'Booking not exists',
+      };
+    }
+    // if (booking.field.sportField.ownerId !== user.id) {
+    //   return {
+    //     statusCode: 403,
+    //     status: 'Error',
+    //     message: 'You do not have permission to update this booking',
+    //   };
+    // }
+    const res = await this.bookingRepository.update(id, data);
+    if (res.affected === 0)
+      return {
+        statusCode: 400,
+        status: 'Failed',
+        message: 'Updated failed',
+      };
+    return {
+      statusCode: 200,
+      status: 'Success',
+      message: 'Updated successfully',
+    };
+  }
+
   async getBookingsCalendar(
     id: string,
     readBookingDateDto: ReadBookingDateDTO,

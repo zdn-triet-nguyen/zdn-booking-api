@@ -32,7 +32,11 @@ export abstract class BaseService<T> {
 
   async update(id: string, options: FindOneOptions<T>, entity: T): Promise<T> {
     try {
-      await this.repository.update(id, entity as QueryDeepPartialEntity<T>);
+      const res = await this.repository.update(
+        id,
+        entity as QueryDeepPartialEntity<T>,
+      );
+      if (res.affected === 0) throw new BadRequestException('Updated failed');
       return this.findOne(options);
     } catch (error: any) {
       throw new BadRequestException(error.message);

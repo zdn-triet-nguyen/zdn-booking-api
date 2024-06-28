@@ -23,8 +23,7 @@ import { ReadBookingDto } from '../dto/read-booking.dto';
 import { ReadOwnerBookingDto } from '../dto/read-owner-booking.dto';
 import { CreateOwnerBookingDto } from '../dto/create-owner-booking.dto';
 import { ReadBookingDateDTO } from '../dto/read-booking-date.dto';
-import { BaseResponse } from 'src/common/response/base.response';
-import { BookingEntity } from '../entities/booking.entity';
+// import { BookingEntity } from '../entities/booking.entity';
 
 @Controller('booking')
 @ApiTags('booking')
@@ -37,6 +36,7 @@ export class BookingController {
   removeBookings(@Param('id') id: string, @User() user: ReadUserDTO) {
     return this.bookingService.removeBookingOfSportField(id, user);
   }
+
   @Patch('update-status-booking/:id')
   updateStatusBookings(
     @Param('id') id: string,
@@ -45,6 +45,16 @@ export class BookingController {
   ) {
     return this.bookingService.updateStatusBooking(id, data, user);
   }
+
+  @Patch('update-booking/:id')
+  updateBookings(
+    @Param('id') id: string,
+    @Body() data: any,
+    @User() user: ReadUserDTO,
+  ) {
+    return this.bookingService.updateBooking(id, data, user);
+  }
+
   @Post()
   create(
     @User() user: ReadUserDTO,
@@ -65,15 +75,14 @@ export class BookingController {
   }
 
   @Get('owner')
-  async getOwnerBookings() // @User() user: ReadUserDTO,
-  : Promise<BaseResponse<BookingEntity>> {
+  async getOwnerBookings() {
     // console.log(user);
-    const res = await this.bookingService.getOwnerBooking();
+    const res = await this.bookingService.getOwnerBooking('booking');
     if (!res) {
       throw new NotFoundException('booking_not_found');
     }
 
-    return new BaseResponse(res, 'bookings_found', 200, new Date().toString());
+    return res;
   }
 
   @Get('user')

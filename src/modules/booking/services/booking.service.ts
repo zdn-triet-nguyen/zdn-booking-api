@@ -180,7 +180,7 @@ export class BookingService extends BaseService<BookingEntity> {
       where: { id: fieldId },
     });
 
-    this.validateFieldExists(fieldId);
+    await this.validateFieldExists(fieldId);
 
     if (field.createdBy !== userId) {
       throw new ForbiddenException(

@@ -109,9 +109,9 @@ export class BookingService extends BaseService<BookingEntity> {
   }
 
   async validateBookingTime(fieldId: string, startTime: Date, endTime: Date) {
-    // if (await this.isBookingTimeInvalid(fieldId, startTime, endTime)) {
-    //   throw new BadRequestException('Invalid booking time');
-    // }
+    if (await this.isBookingTimeInvalid(fieldId, startTime, endTime)) {
+      throw new BadRequestException('Invalid booking time');
+    }
 
     if (await this.hasBookingTime(fieldId, startTime, endTime)) {
       throw new ConflictException('There is a booking at this time');

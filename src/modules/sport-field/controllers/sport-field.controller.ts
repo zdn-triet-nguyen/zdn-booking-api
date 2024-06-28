@@ -241,7 +241,7 @@ export class SportFieldController {
       throw new BadRequestException('sport_field_not_deleted');
     }
     return new BaseResponse(
-      [],
+      null,
       'sport_field_deleted',
       200,
       new Date().toString(),

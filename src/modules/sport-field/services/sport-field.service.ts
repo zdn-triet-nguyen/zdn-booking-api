@@ -5,7 +5,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 
 import { BaseService } from 'src/common/service/base.service';
 import { Filtering } from 'src/decorators/filter.decorator';
@@ -132,11 +132,17 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     );
   }
 
-  async deleteSportField(id: string): Promise<ReadSportFieldDto> {
-    const sportField: SportFieldEntity = await this.delete(id, {
-      where: { id },
-    });
-
-    return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
+  async deleteSportField(id: string): Promise<any> {
+    console.log(123, id);
+    // const sportField: SportFieldEntity = await this.delete(id, {
+    //   where: { id: id, deletedAt: Not(IsNull()) },
+    // });
+    // console.log(sportField);
+    // return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
+    const res = await this.sportFieldRepository.softDelete(id);
+    if (res.affected === 0) {
+      return null;
+    }
+    return { message: 'Sport field deleted successfully' };
   }
 }

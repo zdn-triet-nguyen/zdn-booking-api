@@ -42,6 +42,7 @@ export abstract class BaseService<T> {
   async delete(id: string, options: FindOneOptions<T>): Promise<T> {
     try {
       await this.repository.softDelete(id);
+      console.log(this.findOne(options));
       return this.findOne(options);
     } catch (error: any) {
       throw new BadRequestException(error.message);

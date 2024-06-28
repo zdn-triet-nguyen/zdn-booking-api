@@ -229,7 +229,7 @@ export class BookingService extends BaseService<BookingEntity> {
     this.validateFieldAccess(user.id, readBookingDto.fieldId);
     const query = this.buildBaseQuery(readBookingDto);
     this.applyStatusFilter(query, readBookingDto.status);
-    return query.getMany();
+    return await query.getMany();
   }
 
   async getUserBooking(user: ReadUserDTO, readBookingDto: ReadBookingDto) {
@@ -239,6 +239,17 @@ export class BookingService extends BaseService<BookingEntity> {
     this.applyStatusFilter(query, readBookingDto.status);
 
     return query.getMany();
+  }
+
+  async getOwnerBooking(): Promise<BookingEntity[]> {
+    // const bookings = this.bookingRepository.find({
+    //   where: { field.sportField.owner: owner.id },
+    //   relations: ['field', 'field.sportField'],
+    // });
+
+    const bookings = await this.findAll();
+    // return this.mapper(bookings, BookingEntity, ReadBookingDto);
+    return bookings;
   }
 
   async remove(id: string, user: ReadUserDTO) {

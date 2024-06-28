@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -10,7 +11,7 @@ import {
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateStatusBookingDto } from '../dto/update-status-booking.dto';
 import { API_BEARER_AUTH } from 'src/constants/constants';
 import { User } from 'src/decorators/user.decorator';
@@ -22,8 +23,11 @@ import { ReadBookingDto } from '../dto/read-booking.dto';
 import { ReadOwnerBookingDto } from '../dto/read-owner-booking.dto';
 import { CreateOwnerBookingDto } from '../dto/create-owner-booking.dto';
 import { ReadBookingDateDTO } from '../dto/read-booking-date.dto';
+import { BaseResponse } from 'src/common/response/base.response';
+import { BookingEntity } from '../entities/booking.entity';
 
 @Controller('booking')
+@ApiTags('booking')
 @ApiBearerAuth(API_BEARER_AUTH)
 @UseInterceptors(TransformInterceptor)
 export class BookingController {
@@ -59,6 +63,28 @@ export class BookingController {
       createOwnerBookingDto,
     );
   }
+
+  @Get('owner')
+  async getOwnerBookings() // @User() user: ReadUserDTO,
+  : Promise<BaseResponse<BookingEntity>> {
+    // console.log(user);
+    const res = await this.bookingService.getOwnerBooking();
+    if (!res) {
+      throw new NotFoundException('booking_not_found');
+    }
+
+    return new BaseResponse(res, 'bookings_found', 200, new Date().toString());
+  }
+
+  @Get('user')
+  getUserBookings(
+    @User() user: ReadUserDTO,
+    @Query(new ValidationPipe({ transform: true }))
+    readBookingDto: ReadBookingDto,
+  ) {
+    return this.bookingService.getUserBooking(user, readBookingDto);
+  }
+
   @Get(':id')
   getBookingById(@Param('id') id: string) {
     return this.bookingService.getBookingById(id);
@@ -71,15 +97,6 @@ export class BookingController {
     readBookingDto: ReadOwnerBookingDto,
   ) {
     return this.bookingService.getBookingsByFieldId(user, readBookingDto);
-  }
-
-  @Get('user')
-  getUserBookings(
-    @User() user: ReadUserDTO,
-    @Query(new ValidationPipe({ transform: true }))
-    readBookingDto: ReadBookingDto,
-  ) {
-    return this.bookingService.getUserBooking(user, readBookingDto);
   }
 
   @Get('/bookings-sports-field/:id')

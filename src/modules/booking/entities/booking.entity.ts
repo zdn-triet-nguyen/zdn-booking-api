@@ -16,7 +16,7 @@ export enum BookingStatus {
 @Entity('booking') // Specify the table name (optional)
 export class BookingEntity extends BaseEntity {
   @AutoMap()
-  @Column({ type: 'character varying', length: 10 })
+  @Column({ type: 'character varying', length: 10, nullable: true })
   phone: string;
 
   @AutoMap()
@@ -24,16 +24,20 @@ export class BookingEntity extends BaseEntity {
   fullName: string;
 
   @AutoMap()
+  @Column('uuid', { name: 'field_id' })
+  fieldId: string;
+
+  @AutoMap()
   @ManyToOne(() => FieldEntity, (field) => field.bookings, { nullable: false })
   @JoinColumn({ name: 'field_id' })
   field: FieldEntity;
 
   @AutoMap()
-  @Column({ type: 'date', name: 'start_time' })
+  @Column({ type: 'timestamp', name: 'start_time' })
   startTime: Date;
 
   @AutoMap()
-  @Column({ type: 'date', name: 'end_time' })
+  @Column({ type: 'timestamp', name: 'end_time' })
   endTime: Date;
 
   @AutoMap()

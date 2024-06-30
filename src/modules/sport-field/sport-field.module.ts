@@ -17,6 +17,8 @@ import { SportFieldProfile } from './profiles/sport-field.profile';
 import { SportFieldTypeProfile } from './profiles/sport-field-type.profile';
 import { SportFieldImageProfile } from './profiles/sport-field-image.profile';
 import { LocationModule } from '../location/location.module';
+import { FieldModule } from '../field/field.module';
+import { SportFieldEventListeners } from './events/sport-field-event-listener.event';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { LocationModule } from '../location/location.module';
       SportFieldImageEntity,
     ]),
     LocationModule,
+    FieldModule,
   ],
   controllers: [
     SportFieldController,
@@ -39,6 +42,7 @@ import { LocationModule } from '../location/location.module';
     SportFieldProfile,
     SportFieldTypeProfile,
     SportFieldImageProfile,
+    SportFieldEventListeners,
   ],
   exports: [SportFieldImageService, SportFieldTypeService],
 })

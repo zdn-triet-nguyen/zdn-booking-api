@@ -36,6 +36,15 @@ export class SportFieldTypeService extends BaseService<SportFieldTypeEntity> {
     );
   }
 
+  async findAllSportFieldType(): Promise<ReadSportFieldTypeDto[]> {
+    const sportFieldTypes = await this.findAll();
+    return this.mapper.mapArray(
+      sportFieldTypes,
+      SportFieldTypeEntity,
+      ReadSportFieldTypeDto,
+    );
+  }
+
   async findAllSportFieldTypes(): Promise<ReadSportFieldTypeDto[]> {
     const sportFieldTypes = await this.findAll();
     return this.mapper.mapArray(

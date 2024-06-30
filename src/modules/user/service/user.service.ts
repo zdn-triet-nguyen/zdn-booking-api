@@ -1,10 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/service/base.service';
 import { Repository } from 'typeorm';
@@ -21,7 +17,6 @@ export class UserService extends BaseService<UserEntity> {
     private readonly classMapper: Mapper,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-
     private readonly keycloakService: KeycloakService,
   ) {
     super(userRepository);
@@ -75,12 +70,28 @@ export class UserService extends BaseService<UserEntity> {
     if (userExist) {
       return userExist;
     }
-    console.log('🚀 ~ UserService ~ userExist:', userExist);
+    const dataToken = await this.keycloakService.getAccessTokenRealms();
+    const roleUser = await this.keycloakService.getRoleIdKeyCloak(
+      dataToken.access_token,
+      createSocialUserDto.role,
+    );
+    const userRole = [
+      {
+        id: roleUser.id,
+        name: createSocialUserDto.role,
+      },
+    ];
 
+    await this.keycloakService.createRoleUserKeyCloak(
+      user.id,
+      dataToken.access_token,
+      userRole,
+    );
     try {
       await this.userRepository.save({
         ...user,
         role: createSocialUserDto.role,
+        createdBy: user.id,
       });
     } catch (error) {
       console.log('🚀 ~ UserService ~ error:', error);

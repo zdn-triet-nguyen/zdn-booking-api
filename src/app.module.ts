@@ -24,6 +24,7 @@ import { SportFieldModule } from './modules/sport-field/sport-field.module';
 import { UserModule } from './modules/user/user.module';
 import { FiltersProvider } from './providers/filters.provider';
 import { GuardsProvider } from './providers/guards.provider';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { GuardsProvider } from './providers/guards.provider';
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
+    EventEmitterModule.forRoot(),
     KeycloakConnectModule.register(keycloakConfig),
     UserModule,
     AccountModule,

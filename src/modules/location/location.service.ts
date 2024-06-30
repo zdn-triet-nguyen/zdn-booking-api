@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { WardEntity } from './entities/ward.entity';
 import { LocationEntity } from './entities/location.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
+import axios from 'axios';
 
 @Injectable()
 export class LocationService {
@@ -23,9 +24,15 @@ export class LocationService {
     private wardRepository: Repository<WardEntity>,
     @InjectMapper() private readonly classMapper: Mapper,
   ) {}
+  private readonly apiKey = process.env.BING_MAP_KEY;
 
   async create(createLocationDto: CreateLocationDto): Promise<any> {
     try {
+      const { longitude, latitude } = await this.findLocationByAddress(
+        createLocationDto.addressDetail,
+      );
+      createLocationDto.latitude = latitude;
+      createLocationDto.longitude = longitude;
       const entity = this.classMapper.map(
         createLocationDto,
         CreateLocationDto,
@@ -67,7 +74,7 @@ export class LocationService {
 
   async findAll() {
     const res = await this.locationRepository.find();
-    return res ? res : 'No location found!';
+    return res ? res : null;
   }
 
   async findOne(id: string) {
@@ -79,18 +86,25 @@ export class LocationService {
     return res ? res : 'Location not found!';
   }
 
-  async update(id: string, updateLocationDto: UpdateLocationDto) {
-    const entity = this.classMapper.map(
-      updateLocationDto,
-      UpdateLocationDto,
-      LocationEntity,
-    );
+  async update(id: string, updateLocationDto: Partial<UpdateLocationDto>) {
+    // const entity = this.classMapper.map(
+    //   updateLocationDto,
+    //   UpdateLocationDto,
+    //   LocationEntity,
+    // );
+    if (updateLocationDto.addressDetail) {
+      const { latitude, longitude } = await this.findLocationByAddress(
+        updateLocationDto.addressDetail,
+      );
+      updateLocationDto.latitude = latitude;
+      updateLocationDto.longitude = longitude;
+    }
 
     const res = await this.locationRepository.update(
       {
         id: id,
       },
-      entity,
+      updateLocationDto,
     );
 
     return res.affected > 0
@@ -99,7 +113,7 @@ export class LocationService {
             id: id,
           },
         })
-      : 'Location not found!';
+      : null;
   }
 
   async remove(id: string) {
@@ -119,7 +133,7 @@ export class LocationService {
       },
     });
 
-    return res ? res : 'No district found!';
+    return res;
   }
 
   async findByProvince(id: string) {
@@ -129,7 +143,7 @@ export class LocationService {
       },
     });
 
-    return res ? res : 'No province found!';
+    return res;
   }
 
   async findByWard(id: string) {
@@ -139,21 +153,52 @@ export class LocationService {
       },
     });
 
-    return res ? res : 'No ward found!';
+    return res;
   }
 
   async findAllProvince() {
-    const res = await this.provinceRepository.find();
-    return res ? res : 'No province found!';
+    return await this.provinceRepository.find();
   }
 
   async findAllDistrict() {
-    const res = await this.districtRepository.find();
-    return res ? res : 'No district found!';
+    return await this.districtRepository.find();
   }
 
   async findAllWard() {
-    const res = await this.wardRepository.find();
-    return res ? res : 'No ward found!';
+    return await this.wardRepository.find();
+  }
+
+  async findLocationByAddress(
+    address: string,
+  ): Promise<{ latitude: number; longitude: number }> {
+    try {
+      const response = await axios.get(
+        `http://dev.virtualearth.net/REST/v1/Locations`,
+        {
+          params: {
+            query: address,
+            key: this.apiKey,
+          },
+        },
+      );
+
+      const data = response.data;
+      if (
+        data &&
+        data.resourceSets &&
+        data.resourceSets.length > 0 &&
+        data.resourceSets[0].resources.length > 0
+      ) {
+        const location = data.resourceSets[0].resources[0].point.coordinates;
+        return { latitude: location[0], longitude: location[1] };
+      } else {
+        throw new HttpException('No location found', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException(
+        `Error fetching location: ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

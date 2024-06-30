@@ -4,8 +4,12 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 export class CreateLocationDto {
   @AutoMap()
   @IsOptional()
+  id?: string;
+
+  @AutoMap()
+  @IsOptional()
   @IsString()
-  sportField?: string;
+  sportFieldId?: string;
 
   @AutoMap()
   @IsOptional()
@@ -22,17 +26,23 @@ export class CreateLocationDto {
   @IsString()
   wardId?: string;
 
+  @AutoMap()
   @IsString()
   @IsNotEmpty()
   addressDetail: string;
 
   @AutoMap()
+  @IsOptional()
   @IsNumber()
-  @IsNotEmpty()
-  longitude: number;
+  longitude?: number;
 
   @AutoMap()
   @IsNumber()
-  @IsNotEmpty()
-  latitude: number;
+  @IsOptional()
+  latitude?: number;
+
+  @AutoMap()
+  @IsOptional()
+  @IsString()
+  createdBy?: string;
 }

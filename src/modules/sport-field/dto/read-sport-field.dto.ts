@@ -1,13 +1,21 @@
 import { AutoMap } from '@automapper/classes';
+import { FieldEntity } from 'src/modules/field/entities/field.entity';
 import { CreateSportFieldDto } from './create-sport-field.dto';
+import { ReadSportFieldImageDto } from './sport-field-image/read-sport-field-image.dto';
 
 export class ReadSportFieldDto extends CreateSportFieldDto {
   @AutoMap()
   id: string;
 
   @AutoMap()
-  location: string;
+  fields: FieldEntity[];
 
   @AutoMap()
-  fields: string[];
+  fieldIds: string[];
+
+  // @AutoMap()
+  // location: LocationEntity;
+
+  @AutoMap()
+  sportFieldImages: ReadSportFieldImageDto[];
 }

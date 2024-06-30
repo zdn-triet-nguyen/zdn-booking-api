@@ -36,10 +36,9 @@ export class AuthService {
     await this.populateEmailIfPhoneProvided(signInDto);
 
     const formData = this.createSignInFormData(signInDto);
-    console.log(formData);
-
     try {
       const response = await this.requestKeycloakToken(formData);
+
       return response.data;
     } catch (error) {
       throw new UnauthorizedException('Invalid credentials');
@@ -85,7 +84,7 @@ export class AuthService {
 
   async signUp(createAuthDto: CreateAuthDto) {
     const { name, email, phone, password, role, accountType } = createAuthDto;
-    const userExist = await this.userService.findOne({
+    const userExist = await this.userRepository.findOne({
       where: [{ phone: phone }, { email: email }],
     });
     if (userExist) {
@@ -144,13 +143,16 @@ export class AuthService {
     );
     const newUser = this.mapper.map(createAuthDto, CreateAuthDto, UserEntity);
     newUser.id = user[0].id;
-    const createdUser = await this.userRepository.save(newUser);
+    const createdUser = await this.userRepository.save({
+      ...newUser,
+      createdBy: newUser.id,
+    });
 
     const newAccount = new AccountEntity();
     newAccount.name = accountType;
     newAccount.user = createdUser;
 
-    this.accountRepository.save(newAccount);
+    this.accountRepository.save({ ...newAccount, createdBy: newUser.id });
 
     return {
       status: 'Success',

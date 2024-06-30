@@ -15,7 +15,20 @@ export class SportFieldImageProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, SportFieldImageEntity, ReadSportFieldImageDto);
+      createMap(
+        mapper,
+        SportFieldImageEntity,
+        ReadSportFieldImageDto,
+        forMember(
+          (destination) => destination.sportFieldId,
+          mapFrom((source) => {
+            if (source.sportField) {
+              return source.sportField.id;
+            }
+            return '';
+          }),
+        ),
+      );
       createMap(
         mapper,
         CreateSportFieldImageDto,
@@ -23,8 +36,8 @@ export class SportFieldImageProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.sportField.id,
           mapFrom((source) => {
-            if (source.sportField) {
-              return source.sportField;
+            if (source.sportFieldId) {
+              return source.sportFieldId;
             }
             return undefined;
           }),

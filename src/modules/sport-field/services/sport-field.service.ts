@@ -32,10 +32,6 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     super(sportFieldRepository);
   }
 
-  getSportFieldQuery(sportFieldId: string) {
-    return sportFieldId ? { id: sportFieldId } : {};
-  }
-
   async getUserSportFields(
     userId: string,
     { limit, offset }: Pagination,
@@ -60,11 +56,15 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       GetSportFieldDto,
     );
   }
-
+  getSportFieldQuery(sportFieldId: string) {
+    return sportFieldId ? { id: sportFieldId } : {};
+  }
   async getSportFields(
     { limit, offset }: Pagination,
     filter?: Filtering,
     sportFieldTypeId?: string,
+    startTime?: string,
+    endTime?: string,
   ): Promise<GetSportFieldDto[]> {
     const where = getWhere(filter);
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);

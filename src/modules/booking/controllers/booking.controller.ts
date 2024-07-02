@@ -23,7 +23,7 @@ import { ReadBookingDto } from '../dto/read-booking.dto';
 import { ReadOwnerBookingDto } from '../dto/read-owner-booking.dto';
 import { CreateOwnerBookingDto } from '../dto/create-owner-booking.dto';
 import { ReadBookingDateDTO } from '../dto/read-booking-date.dto';
-// import { BookingEntity } from '../entities/booking.entity';
+import { BookingEntity } from '../entities/booking.entity';
 
 @Controller('booking')
 @ApiTags('booking')
@@ -49,9 +49,10 @@ export class BookingController {
   @Patch('update-booking/:id')
   updateBookings(
     @Param('id') id: string,
-    @Body() data: any,
+    @Body() data: Partial<BookingEntity>,
     @User() user: ReadUserDTO,
   ) {
+    data.updatedBy = user.id;
     return this.bookingService.updateBooking(id, data, user);
   }
 

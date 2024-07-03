@@ -5,7 +5,13 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository } from 'typeorm';
+import {
+  IsNull,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Not,
+  Repository,
+} from 'typeorm';
 
 import { BaseService } from 'src/common/service/base.service';
 import { Filtering } from 'src/decorators/filter.decorator';
@@ -17,6 +23,8 @@ import { UpdateSportFieldDto } from '../dto/update-sport-field.dto';
 import { SportFieldEntity } from '../entities/sport-field.entity';
 import { SportFieldImageService } from './sport-field-image/sport-field-image.service';
 import { GetSportFieldDto } from '../dto/get-sport-field.dto';
+import { BookingStatus } from 'src/modules/booking/entities/booking.entity';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -149,5 +157,61 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       return null;
     }
     return { message: 'Sport field deleted successfully' };
+  }
+  convertTimeToSeconds = (timeString) => {
+    if (!timeString) return null;
+    const time = dayjs(timeString);
+    const hours = time.hour();
+    const minutes = time.minute();
+    const seconds = time.second();
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+
+  async getSportFieldByTime(
+    startTime: Date,
+    endTime: Date,
+    { limit, offset }: Pagination,
+    sportFieldTypeId?: string,
+  ): Promise<any> {
+    const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
+    const qb = this.sportFieldRepository
+      .createQueryBuilder('sportField')
+      .leftJoin('sportField.fields', 'field', 'field.deletedAt IS NULL')
+      .leftJoin('field.bookings', 'booking', 'booking.deletedAt IS NULL')
+      .where('sportField.deletedAt IS NULL')
+      .andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('1')
+          .from('booking', 'booking')
+          .where('booking.fieldId = field.id')
+          .andWhere('booking.deletedAt IS NULL')
+          .andWhere('booking.status = :status', {
+            status: BookingStatus.ACCEPTED,
+          })
+          .andWhere("booking.startTime >= :startTime at time zone '-07' ", {
+            startTime,
+          })
+          .andWhere("booking.endTime <= :endTime at time zone '-07'", {
+            endTime,
+          })
+          .andWhere(
+            'EXTRACT(EPOCH FROM (booking.endTime - booking.startTime)) <= :duration',
+            {
+              duration:
+                this.convertTimeToSeconds(endTime) -
+                this.convertTimeToSeconds(startTime),
+            },
+          )
+          .getQuery();
+
+        return 'NOT EXISTS ' + subQuery;
+      })
+      .where(sportFieldType)
+      .take(limit)
+      .skip(offset)
+      .groupBy('sportField.id');
+
+    return await qb.getMany();
   }
 }

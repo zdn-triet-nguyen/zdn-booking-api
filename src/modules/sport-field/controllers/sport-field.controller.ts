@@ -166,6 +166,27 @@ export class SportFieldController {
     );
   }
 
+  @Get('/by-times')
+  async getAllSportFieldsByTimes(
+    @PaginationParams() pagination?: Pagination,
+    @Query('startTime') startTime?: Date,
+    @Query('endTime') endTime?: Date,
+    @Query('sportFieldTypeId') sportFieldTypeId?: string,
+  ): Promise<BaseResponse<ReadSportFieldDto>> {
+    const sportFields = await this.sportFieldService.getSportFieldByTime(
+      startTime,
+      endTime,
+      pagination,
+      sportFieldTypeId,
+    );
+    return new BaseResponse(
+      sportFields,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+    );
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<any> {
     const sportField = await this.sportFieldService.findSportFieldById(id);

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { BookingService } from './../../booking/services/booking.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectMapper } from '@automapper/nestjs';
@@ -16,6 +16,7 @@ export class FieldService extends BaseService<FieldEntity> {
   constructor(
     @InjectRepository(FieldEntity)
     private readonly fieldRepository: Repository<FieldEntity>,
+    private readonly bookingService: BookingService,
     @InjectMapper()
     public readonly mapper: Mapper,
   ) {
@@ -44,6 +45,39 @@ export class FieldService extends BaseService<FieldEntity> {
       relations: ['sportField'],
     });
     return this.mapper.mapArray(fields, FieldEntity, ReadFieldDto);
+  }
+
+  async findFields(
+    sportFieldID: string,
+    startTime: Date,
+    endTime: Date,
+  ): Promise<ReadFieldDto[]> {
+    const fields = await this.fieldRepository.find({
+      where: {
+        sportFieldId: sportFieldID,
+      },
+    });
+
+    if (!fields) {
+      return null;
+    }
+
+    const availableFields = await Promise.all(
+      fields.map(async (field) => {
+        if (
+          await this.bookingService.hasBookingTime(field.id, startTime, endTime)
+        ) {
+          return null; // Return null for fields that have a booking time
+        }
+        return field; // Return the field if it doesn't have a booking time
+      }),
+    );
+
+    return this.mapper.mapArray(
+      availableFields.filter((field) => field !== null),
+      FieldEntity,
+      ReadFieldDto,
+    );
   }
 
   async updateField(

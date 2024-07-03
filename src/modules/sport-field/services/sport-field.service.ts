@@ -125,9 +125,17 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       UpdateSportFieldDto,
       SportFieldEntity,
     );
+    const getSportField = await this.sportFieldRepository.findOne({
+      where: { id: id, ownerId: sportField.updatedBy },
+    });
+
+    if (!getSportField) {
+      return null;
+    }
+
     const updatedSportField: SportFieldEntity = await this.update(
       id,
-      { where: { id } },
+      { where: { id: id } },
       sportField,
     );
     return this.mapper.map(

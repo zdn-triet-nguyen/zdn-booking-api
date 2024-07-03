@@ -241,21 +241,99 @@ export class BookingService extends BaseService<BookingEntity> {
     return query.getMany();
   }
 
-  async getOwnerBooking(status: string): Promise<BookingEntity[]> {
+  async getTransaction(userId: string, filter?: any) {
+    const query = this.bookingRepository
+      .createQueryBuilder('booking')
+      .innerJoinAndSelect('booking.field', 'field')
+      .innerJoinAndSelect('field.sportField', 'sportField')
+      .innerJoinAndSelect('sportField.sportFieldType', 'sportFieldType')
+      .orderBy('booking.startTime', 'DESC');
+
+    if (userId) {
+      query.where('sportField.ownerId != :userId', { userId });
+    }
+
+    if (
+      filter.type !== 'all' &&
+      filter.type !== undefined &&
+      filter.type !== '' &&
+      filter.type !== null
+    ) {
+      query.andWhere('sportFieldType.id = :type', { type: filter.type });
+    }
+
+    if (filter) {
+      if (filter.status === 'all') {
+        query.andWhere('booking.status != :status', {
+          status: BookingStatus.BOOKING,
+        });
+      } else {
+        query.andWhere('booking.status = :status', { status: filter.status });
+      }
+
+      if (filter.date !== undefined) {
+        query.andWhere("DATE(booking.start_time AT TIME ZONE 'UTC+7') = :day", {
+          day: filter.date,
+        });
+      }
+
+      if (filter.startTime && filter.endTime) {
+        query.andWhere("TO_CHAR(booking.start_time, 'HH24:MI') >= :startTime", {
+          startTime: filter.startTime,
+        });
+        query.andWhere("TO_CHAR(booking.start_time, 'HH24:MI') <= :endTime", {
+          endTime: filter.endTime,
+        });
+        query.andWhere("TO_CHAR(booking.end_time, 'HH24:MI') <= :endTime", {
+          endTime: filter.endTime,
+        });
+      }
+    }
+
+    if (
+      filter.name !== null &&
+      filter.name !== undefined &&
+      filter.name !== ''
+    ) {
+      console.log(filter.name);
+      query.andWhere('booking.fullName ILIKE :name', {
+        name: `%${filter.name}%`,
+      });
+    }
+
+    const total = await query.getCount();
+
+    if (filter.page > 0) {
+      query.skip((filter.page - 1) * 15);
+      query.take(15);
+    }
+
+    const data = await query.getMany();
+    console.log({ data, total });
+
+    return {
+      data,
+      total,
+    };
+  }
+
+  async getOwnerBooking(uid: string, status: string): Promise<BookingEntity[]> {
     // const bookings = this.bookingRepository.find({
     //   where: { field.sportField.owner: owner.id },
     //   relations: ['field', 'field.sportField'],
     // });
-
+    //
     const bookings = await this.bookingRepository.find({
-      where: { status: status },
+      where: { status: status, field: { sportField: { ownerId: uid } } },
       relations: [
         'field',
         'field.sportField',
         'field.sportField.sportFieldType',
         'field.sportField.location',
       ],
+      order: { startTime: 'DESC' },
     });
+
     // return this.mapper(bookings, BookingEntity, ReadBookingDto);
     return bookings;
   }
@@ -358,9 +436,7 @@ export class BookingService extends BaseService<BookingEntity> {
       where: {
         id,
       },
-      relations: {
-        field: true,
-      },
+      relations: ['field', 'field.sportField'],
     });
     if (!booking) {
       return {
@@ -369,7 +445,7 @@ export class BookingService extends BaseService<BookingEntity> {
         message: 'Booking not exists',
       };
     }
-    if (booking.field.createdBy !== user.id) {
+    if (booking.field.sportField.ownerId !== user.id) {
       return {
         statusCode: 403,
         status: 'Error',

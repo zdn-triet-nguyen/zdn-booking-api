@@ -5,7 +5,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 
 import { BaseService } from 'src/common/service/base.service';
 import { Filtering } from 'src/decorators/filter.decorator';
@@ -33,10 +33,6 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     super(sportFieldRepository);
   }
 
-  getSportFieldQuery(sportFieldId: string) {
-    return sportFieldId ? { id: sportFieldId } : {};
-  }
-
   async getUserSportFields(
     userId: string,
     { limit, offset }: Pagination,
@@ -61,11 +57,15 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       GetSportFieldDto,
     );
   }
-
+  getSportFieldQuery(sportFieldId: string) {
+    return sportFieldId ? { id: sportFieldId } : {};
+  }
   async getSportFields(
     { limit, offset }: Pagination,
     filter?: Filtering,
     sportFieldTypeId?: string,
+    startTime?: string,
+    endTime?: string,
   ) {
     const where = getWhere(filter);
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
@@ -148,11 +148,17 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     );
   }
 
-  async deleteSportField(id: string): Promise<ReadSportFieldDto> {
-    const sportField: SportFieldEntity = await this.delete(id, {
-      where: { id },
-    });
-
-    return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
+  async deleteSportField(id: string): Promise<any> {
+    console.log(123, id);
+    // const sportField: SportFieldEntity = await this.delete(id, {
+    //   where: { id: id, deletedAt: Not(IsNull()) },
+    // });
+    // console.log(sportField);
+    // return this.mapper.map(sportField, SportFieldEntity, ReadSportFieldDto);
+    const res = await this.sportFieldRepository.softDelete(id);
+    if (res.affected === 0) {
+      return null;
+    }
+    return { message: 'Sport field deleted successfully' };
   }
 }

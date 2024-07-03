@@ -241,13 +241,21 @@ export class BookingService extends BaseService<BookingEntity> {
     return query.getMany();
   }
 
-  async getOwnerBooking(): Promise<BookingEntity[]> {
+  async getOwnerBooking(status: string): Promise<BookingEntity[]> {
     // const bookings = this.bookingRepository.find({
     //   where: { field.sportField.owner: owner.id },
     //   relations: ['field', 'field.sportField'],
     // });
 
-    const bookings = await this.findAll();
+    const bookings = await this.bookingRepository.find({
+      where: { status: status },
+      relations: [
+        'field',
+        'field.sportField',
+        'field.sportField.sportFieldType',
+        'field.sportField.location',
+      ],
+    });
     // return this.mapper(bookings, BookingEntity, ReadBookingDto);
     return bookings;
   }
@@ -375,6 +383,46 @@ export class BookingService extends BaseService<BookingEntity> {
       message: 'Updated successfully',
     };
   }
+
+  async updateBooking(
+    id: string,
+    data: Partial<BookingEntity>,
+    user: ReadUserDTO,
+  ) {
+    const booking = await this.bookingRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['field', 'field.sportField'],
+    });
+    if (!booking) {
+      return {
+        statusCode: 404,
+        status: 'Error',
+        message: 'Booking not exists',
+      };
+    }
+    // if (booking.field.sportField.ownerId !== user.id) {
+    //   return {
+    //     statusCode: 403,
+    //     status: 'Error',
+    //     message: 'You do not have permission to update this booking',
+    //   };
+    // }
+    const res = await this.bookingRepository.update(id, data);
+    if (res.affected === 0)
+      return {
+        statusCode: 400,
+        status: 'Failed',
+        message: 'Updated failed',
+      };
+    return {
+      statusCode: 200,
+      status: 'Success',
+      message: 'Updated successfully',
+    };
+  }
+
   async getBookingsCalendar(
     id: string,
     readBookingDateDto: ReadBookingDateDTO,

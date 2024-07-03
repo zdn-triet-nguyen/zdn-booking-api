@@ -148,11 +148,15 @@ export class SportFieldController {
     ])
     filtering?: Filtering,
     @Query('sportFieldTypeId') sportFieldTypeId?: string,
+    @Query('startTime') startTime?: string,
+    @Query('endTime') endTime?: string,
   ): Promise<BaseResponse<ReadSportFieldDto>> {
     return this.sportFieldService.getSportFields(
       pagination,
       filtering,
       sportFieldTypeId,
+      startTime,
+      endTime,
     );
   }
 
@@ -235,7 +239,7 @@ export class SportFieldController {
       throw new BadRequestException('sport_field_not_deleted');
     }
     return new BaseResponse(
-      [],
+      null,
       'sport_field_deleted',
       200,
       new Date().toString(),

@@ -151,18 +151,12 @@ export class SportFieldController {
     @Query('startTime') startTime?: string,
     @Query('endTime') endTime?: string,
   ): Promise<BaseResponse<ReadSportFieldDto>> {
-    const sportFields = await this.sportFieldService.getSportFields(
+    return this.sportFieldService.getSportFields(
       pagination,
       filtering,
       sportFieldTypeId,
       startTime,
       endTime,
-    );
-    return new BaseResponse(
-      sportFields,
-      'sport_field_found',
-      200,
-      new Date().toString(),
     );
   }
 
@@ -203,9 +197,11 @@ export class SportFieldController {
 
   @Patch(':id')
   async update(
+    @User() user: ReadUserDTO,
     @Param('id') id: string,
     @Body() updateSportFieldDto: Partial<UpdateSportFieldDto>,
   ) {
+    updateSportFieldDto.updatedBy = user.id;
     const res = await this.sportFieldService.updateSportField(
       id,
       updateSportFieldDto,

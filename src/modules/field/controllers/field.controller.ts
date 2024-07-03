@@ -8,6 +8,7 @@ import {
   Delete,
   NotFoundException,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -61,17 +62,25 @@ export class FieldController {
     );
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<BaseResponse<ReadFieldDto>> {
-    const field: ReadFieldDto = await this.fieldService.findFieldById(id);
+  @Get('avalable-field')
+  async findFields(
+    @Query('sportFieldId') sportFieldId: string,
+    @Query('startTime') startTime: Date,
+    @Query('endTime') endTime: Date,
+  ): Promise<BaseResponse<ReadFieldDto>> {
+    const fields = await this.fieldService.findFields(
+      sportFieldId,
+      startTime,
+      endTime,
+    );
 
-    if (!field) {
-      throw new NotFoundException('field_not_found');
+    if (!fields) {
+      throw new NotFoundException('fields_not_found');
     }
 
     return new BaseResponse(
-      field,
-      'field_retrieved',
+      fields,
+      'fields_retrieved',
       200,
       new Date().toString(),
     );
@@ -91,6 +100,22 @@ export class FieldController {
     return new BaseResponse(
       fields,
       'fields_retrieved',
+      200,
+      new Date().toString(),
+    );
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<BaseResponse<ReadFieldDto>> {
+    const field: ReadFieldDto = await this.fieldService.findFieldById(id);
+
+    if (!field) {
+      throw new NotFoundException('field_not_found');
+    }
+
+    return new BaseResponse(
+      field,
+      'field_retrieved',
       200,
       new Date().toString(),
     );

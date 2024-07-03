@@ -25,6 +25,7 @@ import { SportFieldImageService } from './sport-field-image/sport-field-image.se
 import { GetSportFieldDto } from '../dto/get-sport-field.dto';
 import { BookingStatus } from 'src/modules/booking/entities/booking.entity';
 import dayjs from 'dayjs';
+import { BaseResponse } from 'src/common/response/base.response';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -73,12 +74,12 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     sportFieldTypeId?: string,
     startTime?: string,
     endTime?: string,
-  ): Promise<GetSportFieldDto[]> {
+  ) {
     const where = getWhere(filter);
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
 
-    const sportFields: SportFieldEntity[] =
-      await this.sportFieldRepository.find({
+    const [sportFields, total]: [SportFieldEntity[], number] =
+      await this.sportFieldRepository.findAndCount({
         where: {
           ...where,
           sportFieldType,
@@ -92,10 +93,20 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
         skip: offset,
       });
 
-    return this.mapper.mapArray(
+    const totalPage = Math.ceil(total / limit);
+
+    const getSportFieldDto = this.mapper.mapArray(
       sportFields,
       SportFieldEntity,
       GetSportFieldDto,
+    );
+
+    return new BaseResponse(
+      getSportFieldDto,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+      totalPage,
     );
   }
 
@@ -133,9 +144,17 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       UpdateSportFieldDto,
       SportFieldEntity,
     );
+    const getSportField = await this.sportFieldRepository.findOne({
+      where: { id: id, ownerId: sportField.updatedBy },
+    });
+
+    if (!getSportField) {
+      return null;
+    }
+
     const updatedSportField: SportFieldEntity = await this.update(
       id,
-      { where: { id } },
+      { where: { id: id } },
       sportField,
     );
     return this.mapper.map(

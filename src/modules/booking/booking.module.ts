@@ -12,5 +12,6 @@ import { FieldEntity } from '../field/entities/field.entity';
   imports: [
     TypeOrmModule.forFeature([BookingEntity, SportFieldEntity, FieldEntity]),
   ],
+  exports: [BookingService],
 })
 export class BookingModule {}

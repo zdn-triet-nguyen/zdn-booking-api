@@ -76,13 +76,33 @@ export class BookingController {
   }
 
   @Get('owner')
-  async getOwnerBookings() {
-    // console.log(user);
-    const res = await this.bookingService.getOwnerBooking('booking');
+  async getOwnerBookings(
+    @User() user: ReadUserDTO,
+    @Query(new ValidationPipe({ transform: true }))
+    page?: number,
+  ) {
+    const res = await this.bookingService.getOwnerBooking(
+      user.id,
+      'booking',
+      page,
+    );
     if (!res) {
       throw new NotFoundException('booking_not_found');
     }
 
+    return res;
+  }
+
+  @Get('transactions')
+  async getTransaction(
+    @User() user: ReadUserDTO,
+    @Query(new ValidationPipe({ transform: true }))
+    filter?: any,
+  ) {
+    const res = await this.bookingService.getTransaction(user.id, filter);
+    if (!res) {
+      throw new NotFoundException('booking_not_found');
+    }
     return res;
   }
 
@@ -113,6 +133,7 @@ export class BookingController {
   getBookingSportField(@Param('id') id: string) {
     return this.bookingService.getBookingsBySportFieldId(id);
   }
+
   @Get('/bookings-calendar-sport-field/:id')
   getBookingCalendar(
     @Param('id') id: string,
@@ -120,6 +141,7 @@ export class BookingController {
   ) {
     return this.bookingService.getBookingsCalendar(id, readBookingDateDto);
   }
+
   @Delete(':id')
   removeBooking(@Param('id') id: string, @User() user: ReadUserDTO) {
     return this.bookingService.remove(id, user);

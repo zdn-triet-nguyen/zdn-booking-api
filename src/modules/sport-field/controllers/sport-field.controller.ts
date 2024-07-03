@@ -149,16 +149,10 @@ export class SportFieldController {
     filtering?: Filtering,
     @Query('sportFieldTypeId') sportFieldTypeId?: string,
   ): Promise<BaseResponse<ReadSportFieldDto>> {
-    const sportFields = await this.sportFieldService.getSportFields(
+    return this.sportFieldService.getSportFields(
       pagination,
       filtering,
       sportFieldTypeId,
-    );
-    return new BaseResponse(
-      sportFields,
-      'sport_field_found',
-      200,
-      new Date().toString(),
     );
   }
 

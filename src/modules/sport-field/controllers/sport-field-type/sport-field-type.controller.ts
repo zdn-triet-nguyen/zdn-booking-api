@@ -17,7 +17,7 @@ import { ReadSportFieldDto } from '../../dto/read-sport-field.dto';
 
 @ApiTags('sport-field-type')
 @ApiBearerAuth(API_BEARER_AUTH)
-@Public()
+// @Public()
 @Controller('sport-field-type')
 export class SportFieldTypeController {
   constructor(private readonly sportFieldTypeSerive: SportFieldTypeService) {}

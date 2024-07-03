@@ -17,6 +17,7 @@ import { UpdateSportFieldDto } from '../dto/update-sport-field.dto';
 import { SportFieldEntity } from '../entities/sport-field.entity';
 import { SportFieldImageService } from './sport-field-image/sport-field-image.service';
 import { GetSportFieldDto } from '../dto/get-sport-field.dto';
+import { BaseResponse } from 'src/common/response/base.response';
 
 @Injectable()
 export class SportFieldService extends BaseService<SportFieldEntity> {
@@ -30,10 +31,6 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     private readonly locationService: LocationService,
   ) {
     super(sportFieldRepository);
-  }
-
-  getSportFieldQuery(sportFieldId: string) {
-    return sportFieldId ? { id: sportFieldId } : {};
   }
 
   async getUserSportFields(
@@ -60,17 +57,21 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       GetSportFieldDto,
     );
   }
-
+  getSportFieldQuery(sportFieldId: string) {
+    return sportFieldId ? { id: sportFieldId } : {};
+  }
   async getSportFields(
     { limit, offset }: Pagination,
     filter?: Filtering,
     sportFieldTypeId?: string,
-  ): Promise<GetSportFieldDto[]> {
+    startTime?: string,
+    endTime?: string,
+  ) {
     const where = getWhere(filter);
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
 
-    const sportFields: SportFieldEntity[] =
-      await this.sportFieldRepository.find({
+    const [sportFields, total]: [SportFieldEntity[], number] =
+      await this.sportFieldRepository.findAndCount({
         where: {
           ...where,
           sportFieldType,
@@ -84,10 +85,20 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
         skip: offset,
       });
 
-    return this.mapper.mapArray(
+    const totalPage = Math.ceil(total / limit);
+
+    const getSportFieldDto = this.mapper.mapArray(
       sportFields,
       SportFieldEntity,
       GetSportFieldDto,
+    );
+
+    return new BaseResponse(
+      getSportFieldDto,
+      'sport_field_found',
+      200,
+      new Date().toString(),
+      totalPage,
     );
   }
 

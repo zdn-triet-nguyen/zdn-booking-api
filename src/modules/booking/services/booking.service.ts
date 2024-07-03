@@ -264,7 +264,7 @@ export class BookingService extends BaseService<BookingEntity> {
 
     if (filter) {
       if (filter.status === 'all') {
-        query.andWhere('booking.status != :status', {
+        query.andWhere('booking.status = :status', {
           status: BookingStatus.BOOKING,
         });
       } else {
@@ -317,22 +317,22 @@ export class BookingService extends BaseService<BookingEntity> {
     };
   }
 
-  async getOwnerBooking(uid: string, status: string): Promise<BookingEntity[]> {
+  async getOwnerBooking(uid: string, status: string, page: number) {
     // const bookings = this.bookingRepository.find({
     //   where: { field.sportField.owner: owner.id },
     //   relations: ['field', 'field.sportField'],
     // });
     //
-    const bookings = await this.bookingRepository.find({
-      where: { status: status, field: { sportField: { ownerId: uid } } },
-      relations: [
-        'field',
-        'field.sportField',
-        'field.sportField.sportFieldType',
-        'field.sportField.location',
-      ],
-      order: { startTime: 'DESC' },
-    });
+    const filter = {
+      type: 'all',
+      status: status,
+      date: undefined,
+      startTime: undefined,
+      endTime: undefined,
+      name: undefined,
+      page: page,
+    };
+    const bookings = await this.getTransaction(uid, filter);
 
     // return this.mapper(bookings, BookingEntity, ReadBookingDto);
     return bookings;
@@ -478,13 +478,13 @@ export class BookingService extends BaseService<BookingEntity> {
         message: 'Booking not exists',
       };
     }
-    // if (booking.field.sportField.ownerId !== user.id) {
-    //   return {
-    //     statusCode: 403,
-    //     status: 'Error',
-    //     message: 'You do not have permission to update this booking',
-    //   };
-    // }
+    if (booking.field.sportField.ownerId !== user.id) {
+      return {
+        statusCode: 403,
+        status: 'Error',
+        message: 'You do not have permission to update this booking',
+      };
+    }
     const res = await this.bookingRepository.update(id, data);
     if (res.affected === 0)
       return {

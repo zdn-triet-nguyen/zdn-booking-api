@@ -49,7 +49,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
     const sportFields: SportFieldEntity[] =
       await this.sportFieldRepository.find({
-        where: { ownerId: userId, sportFieldType },
+        where: { ownerId: userId, ...sportFieldType },
         relations: {
           sportFieldImages: true,
           location: true,
@@ -66,7 +66,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     );
   }
   getSportFieldQuery(sportFieldId: string) {
-    return sportFieldId ? { id: sportFieldId } : {};
+    return sportFieldId ? { sportFieldTypeId: sportFieldId } : {};
   }
   async getSportFields(
     { limit, offset }: Pagination,
@@ -82,7 +82,7 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
       await this.sportFieldRepository.findAndCount({
         where: {
           ...where,
-          sportFieldType,
+          ...sportFieldType,
         },
         relations: {
           sportFieldImages: true,
@@ -193,11 +193,13 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     sportFieldTypeId?: string,
   ): Promise<any> {
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
+     console.log(sportFieldType);
     const qb = this.sportFieldRepository
       .createQueryBuilder('sportField')
       .leftJoin('sportField.fields', 'field', 'field.deletedAt IS NULL')
       .leftJoin('field.bookings', 'booking', 'booking.deletedAt IS NULL')
       .where('sportField.deletedAt IS NULL')
+      .where(sportFieldType)
       .andWhere((qb) => {
         const subQuery = qb
           .subQuery()
@@ -226,11 +228,15 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
 
         return 'NOT EXISTS ' + subQuery;
       })
-      .where(sportFieldType)
       .take(limit)
       .skip(offset)
       .groupBy('sportField.id');
+    const totalQuery = qb.clone();
 
-    return await qb.getMany();
+    const total = await totalQuery.getCount();
+    const totalPage = Math.ceil(total / limit);
+
+    const data = await qb.getMany();
+    return { data, totalPage };
   }
 }

@@ -340,7 +340,6 @@ export class SportFieldService extends BaseService<SportFieldEntity> {
     sportFieldTypeId?: string,
   ): Promise<any> {
     const sportFieldType = this.getSportFieldQuery(sportFieldTypeId);
-     console.log(sportFieldType);
     const qb = this.sportFieldRepository
       .createQueryBuilder('sportField')
       .leftJoin('sportField.fields', 'field', 'field.deletedAt IS NULL')

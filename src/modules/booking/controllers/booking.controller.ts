@@ -106,6 +106,22 @@ export class BookingController {
     return res;
   }
 
+  @Get('owner-schedule')
+  async getOwnerSchedule(
+    @User() user: ReadUserDTO,
+    @Query(new ValidationPipe({ transform: true }))
+    readBookingDto: ReadBookingDto,
+  ) {
+    const res = await this.bookingService.getOwnerSchedule(
+      user,
+      readBookingDto,
+    );
+    if (!res) {
+      throw new NotFoundException('booking_not_found');
+    }
+    return res;
+  }
+
   @Get('user')
   getUserBookings(
     @User() user: ReadUserDTO,

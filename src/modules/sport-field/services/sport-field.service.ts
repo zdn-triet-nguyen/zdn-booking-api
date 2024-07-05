@@ -13,7 +13,8 @@ import {
   Repository,
 } from 'typeorm';
 
-import { BaseService } from 'src/common/service/base.service';
+// import { BaseService } from 'src/common/service/base.service';
+import { BaseService } from '../../../common/service/base.service';
 import { Filtering } from 'src/decorators/filter.decorator';
 import { Pagination } from 'src/decorators/pagination.decorator';
 import { getWhere } from 'src/helpers/typeorm.helper';

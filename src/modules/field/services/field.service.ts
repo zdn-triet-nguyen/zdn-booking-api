@@ -4,7 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { IsNull, Not, Repository } from 'typeorm';
-import { BaseService } from 'src/common/service/base.service';
+// import { BaseService } from 'src/common/service/base.service';
+import { BaseService } from '../../../common/service/base.service';
 
 import { FieldEntity } from '../entities/field.entity';
 import { CreateFieldDto } from '../dto/create-field.dto';

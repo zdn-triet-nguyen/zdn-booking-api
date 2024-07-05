@@ -9,7 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BaseService } from 'src/common/service/base.service';
+import { BaseService } from '../../../common/service/base.service';
 import { DateTimeHelper } from 'src/helpers/datetime.helper';
 import { FieldEntity } from 'src/modules/field/entities/field.entity';
 import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';

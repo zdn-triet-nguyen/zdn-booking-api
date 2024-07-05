@@ -14,7 +14,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../entities/user.entity';
 import { ReadUserDTO } from '../dto/read-user-dto';
-import { CreateAuthDto } from 'src/modules/auth/dto/create-auth.dto';
+import { CreateAuthDto } from '../../../modules/auth/dto/create-auth.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
 
 @Injectable()

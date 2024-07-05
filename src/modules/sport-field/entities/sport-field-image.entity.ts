@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { SportFieldEntity } from './sport-field.entity';
 import { AutoMap } from '@automapper/classes';

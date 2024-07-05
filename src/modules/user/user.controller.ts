@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './service/user.service';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../constants/constants';
 import { ReadUserDTO } from './dto/read-user-dto';
-import { User } from 'src/decorators/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
+import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { CreateSocialUserDto } from './dto/create-social-user.dto';
 @ApiTags('user')
 @UseInterceptors(TransformInterceptor)

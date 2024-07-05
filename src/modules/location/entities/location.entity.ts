@@ -1,5 +1,5 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { SportFieldEntity } from '../../../modules/sport-field/entities/sport-field.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { DistrictEntity } from './district.entity';
 import { ProvinceEntity } from './province.entity';

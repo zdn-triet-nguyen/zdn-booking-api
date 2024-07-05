@@ -12,22 +12,22 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../../constants/constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { SportFieldService } from '../services/sport-field.service';
 
 import { CreateSportFieldDto } from '../dto/create-sport-field.dto';
 import { UpdateSportFieldDto } from '../dto/update-sport-field.dto';
-import { BaseResponse } from 'src/common/response/base.response';
+import { BaseResponse } from '../../../common/response/base.response';
 import { Public } from 'nest-keycloak-connect';
-import { FieldService } from 'src/modules/field/services/field.service';
+import { FieldService } from '../../../modules/field/services/field.service';
 import { SportFieldImageService } from '../services/sport-field-image/sport-field-image.service';
-import { LocationService } from 'src/modules/location/location.service';
-import { CreateFieldDto } from 'src/modules/field/dto/create-field.dto';
-import { UploadImageDto } from 'src/common/dto/upload-image.dto';
+import { LocationService } from '../../../modules/location/location.service';
+import { CreateFieldDto } from '../../../modules/field/dto/create-field.dto';
+import { UploadImageDto } from '../../../common/dto/upload-image.dto';
 import { CreateSportFieldImageDto } from '../dto/sport-field-image/create-sport-field-image.dto';
-import { CreateLocationDto } from 'src/modules/location/dto/create-location.dto';
+import { CreateLocationDto } from '../../../modules/location/dto/create-location.dto';
 import {
   CreateFieldEvent,
   CreateLocationEvent,
@@ -38,13 +38,13 @@ import {
 import {
   Pagination,
   PaginationParams,
-} from 'src/decorators/pagination.decorator';
-import { Filtering, FilteringParams } from 'src/decorators/filter.decorator';
-import { User } from 'src/decorators/user.decorator';
-import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+} from '../../../decorators/pagination.decorator';
+import { Filtering, FilteringParams } from '../../../decorators/filter.decorator';
+import { User } from '../../../decorators/user.decorator';
+import { ReadUserDTO } from '../../../modules/user/dto/read-user-dto';
 import { create } from 'domain';
 import { ReadSportFieldDto } from '../dto/read-sport-field.dto';
-import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
+import { TransformInterceptor } from '../../../interceptors/transform.interceptor';
 
 @ApiTags('sport-field')
 @Controller('sport-field')

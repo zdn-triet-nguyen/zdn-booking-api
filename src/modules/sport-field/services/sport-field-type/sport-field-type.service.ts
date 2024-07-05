@@ -4,7 +4,6 @@ import { IsNull, Not, Repository } from 'typeorm';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 
-// import { BaseService } from 'src/common/service/base.service';
 import { BaseService } from '../../../../common/service/base.service';
 import { CreateSportFieldTypeDto } from '../../dto/sport-field-type/create-sport-field-type.dto';
 import { SportFieldTypeEntity } from '../../entities/sport-field-type.entity';

@@ -9,8 +9,8 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'nest-keycloak-connect';
 
-import { API_BEARER_AUTH } from 'src/constants/constants';
-import { BaseResponse } from 'src/common/response/base.response';
+import { API_BEARER_AUTH } from '../../../../constants/constants';
+import { BaseResponse } from '../../../../common/response/base.response';
 import { SportFieldTypeService } from '../../services/sport-field-type/sport-field-type.service';
 import { CreateSportFieldTypeDto } from '../../dto/sport-field-type/create-sport-field-type.dto';
 import { ReadSportFieldDto } from '../../dto/read-sport-field.dto';

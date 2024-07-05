@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { FieldService } from 'src/modules/field/services/field.service';
+import { FieldService } from '../../../modules/field/services/field.service';
 import { SportFieldImageService } from '../services/sport-field-image/sport-field-image.service';
-import { LocationService } from 'src/modules/location/location.service';
+import { LocationService } from '../../../modules/location/location.service';
 import {
   CreateFieldEvent,
   CreateLocationEvent,

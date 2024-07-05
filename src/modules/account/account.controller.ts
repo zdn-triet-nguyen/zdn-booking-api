@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccountService } from './account.service';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../constants/constants';
 @ApiTags('account')
 @Controller('account')
 @ApiBearerAuth(API_BEARER_AUTH)

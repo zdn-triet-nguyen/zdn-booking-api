@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { MailService } from '../services/mail.service';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../../constants/constants';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('mail')

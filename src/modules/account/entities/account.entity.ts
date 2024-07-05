@@ -1,5 +1,5 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { UserEntity } from '../../../modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 export enum AccountType {

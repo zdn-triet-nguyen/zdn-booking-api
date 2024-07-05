@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '../../../common/service/base.service';
-import { DateTimeHelper } from 'src/helpers/datetime.helper';
-import { FieldEntity } from 'src/modules/field/entities/field.entity';
-import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
-import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { DateTimeHelper } from '../../../helpers/datetime.helper';
+import { FieldEntity } from '../../../modules/field/entities/field.entity';
+import { SportFieldEntity } from '../../../modules/sport-field/entities/sport-field.entity';
+import { ReadUserDTO } from '../../../modules/user/dto/read-user-dto';
 import {
   In,
   LessThanOrEqual,

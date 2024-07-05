@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
 import {
   Column,
   Entity,
@@ -11,7 +11,7 @@ import { FieldEntity } from '../../field/entities/field.entity';
 import { LocationEntity } from '../../location/entities/location.entity';
 import { SportFieldImageEntity } from './sport-field-image.entity';
 import { SportFieldTypeEntity } from './sport-field-type.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from '../../../modules/user/entities/user.entity';
 import { AutoMap } from '@automapper/classes';
 
 @Entity('sport_field')

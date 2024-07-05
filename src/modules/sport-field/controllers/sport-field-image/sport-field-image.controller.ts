@@ -1,4 +1,4 @@
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../../../constants/constants';
 import { SportFieldImageService } from './../../services/sport-field-image/sport-field-image.service';
 import {
   BadRequestException,
@@ -14,7 +14,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'nest-keycloak-connect';
 import { CreateSportFieldImageDto } from '../../dto/sport-field-image/create-sport-field-image.dto';
-import { BaseResponse } from 'src/common/response/base.response';
+import { BaseResponse } from '../../../../common/response/base.response';
 import { ReadSportFieldImageDto } from '../../dto/sport-field-image/read-sport-field-image.dto';
 
 @ApiTags('sport-field-image')

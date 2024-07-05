@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'nest-keycloak-connect';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../../constants/constants';
 import { CreateAuthDto } from '../dto/create-auth.dto';
 import { SignInDto } from '../dto/sign-in.dto';
 import { AuthService } from '../services/auth.service';

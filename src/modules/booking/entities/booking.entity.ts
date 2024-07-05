@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AutoMap } from '@automapper/classes';
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { FieldEntity } from 'src/modules/field/entities/field.entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { FieldEntity } from '../../../modules/field/entities/field.entity';
+import { UserEntity } from '../../../modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 export enum BookingStatus {

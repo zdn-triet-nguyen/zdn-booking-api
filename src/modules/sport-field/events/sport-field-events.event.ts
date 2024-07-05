@@ -1,4 +1,4 @@
-import { UploadImageDto } from 'src/common/dto/upload-image.dto';
+import { UploadImageDto } from '../../../common/dto/upload-image.dto';
 
 export class CreateFieldEvent {
   constructor(

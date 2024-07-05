@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../services/firebase.service';
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../../constants/constants';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Public } from 'nest-keycloak-connect';
 

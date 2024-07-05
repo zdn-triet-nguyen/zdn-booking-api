@@ -1,8 +1,8 @@
 import { Bucket } from '@google-cloud/storage';
 import { Inject, Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import { UploadImageDto } from 'src/common/dto/upload-image.dto';
-import { BaseResponse } from 'src/common/response/base.response';
+import { UploadImageDto } from '../../../common/dto/upload-image.dto';
+import { BaseResponse } from '../../../common/response/base.response';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

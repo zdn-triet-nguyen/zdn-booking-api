@@ -13,10 +13,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateStatusBookingDto } from '../dto/update-status-booking.dto';
-import { API_BEARER_AUTH } from 'src/constants/constants';
-import { User } from 'src/decorators/user.decorator';
-import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
-import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { API_BEARER_AUTH } from '../../../constants/constants';
+import { User } from '../../../decorators/user.decorator';
+import { TransformInterceptor } from '../../../interceptors/transform.interceptor';
+import { ReadUserDTO } from '../../../modules/user/dto/read-user-dto';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { BookingService } from '../services/booking.service';
 import { ReadBookingDto } from '../dto/read-booking.dto';

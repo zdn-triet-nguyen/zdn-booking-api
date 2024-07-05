@@ -9,7 +9,7 @@ import { SportFieldService } from './services/sport-field.service';
 import { SportFieldImageService } from './services/sport-field-image/sport-field-image.service';
 import { SportFieldTypeService } from './services/sport-field-type/sport-field-type.service';
 
-import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
+import { SportFieldEntity } from '../../modules/sport-field/entities/sport-field.entity';
 import { SportFieldImageEntity } from './entities/sport-field-image.entity';
 import { SportFieldTypeEntity } from './entities/sport-field-type.entity';
 

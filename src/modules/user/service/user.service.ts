@@ -2,12 +2,11 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { BaseService } from 'src/common/service/base.service';
 import { BaseService } from '../../../common/service/base.service';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
-import { KeycloakService } from 'src/modules/auth/api/auth';
+import { KeycloakService } from '../../../modules/auth/api/auth';
 import { ReadUserDTO } from '../dto/read-user-dto';
 import { CreateSocialUserDto } from '../dto/create-social-user.dto';
 

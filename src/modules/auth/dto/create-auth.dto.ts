@@ -1,8 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
-import { AccountType } from 'src/modules/account/entities/account.entity';
+import { AccountType } from '../../../modules/account/entities/account.entity';
 // import { ROLE } from 'src/constants/constants';
-import { UserRole } from 'src/modules/user/entities/user.entity';
+import { UserRole } from '../../../modules/user/entities/user.entity';
 
 export class CreateAuthDto {
   @AutoMap()

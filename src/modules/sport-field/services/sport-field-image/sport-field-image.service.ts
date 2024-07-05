@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-// import { BaseService } from 'src/common/service/base.service';
 import { BaseService } from '../../../../common/service/base.service';
 import { SportFieldImageEntity } from '../../entities/sport-field-image.entity';
 import { InjectRepository } from '@nestjs/typeorm';

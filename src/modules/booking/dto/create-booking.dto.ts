@@ -6,7 +6,7 @@ import {
   IsUUID,
   Validate,
 } from 'class-validator';
-import { IsBeforeConstraint } from 'src/common/validator/before.validator';
+import { IsBeforeConstraint } from '../../../common/validator/before.validator';
 export class CreateBookingDto {
   @IsUUID()
   @IsNotEmpty()

@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { UploadImageDto } from 'src/common/dto/upload-image.dto';
+import { UploadImageDto } from '../../../../common/dto/upload-image.dto';
 
 export class CreateSportFieldImageDto extends UploadImageDto {
   @AutoMap()

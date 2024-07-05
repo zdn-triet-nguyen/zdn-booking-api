@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { ReadUserDTO } from '../modules/user/dto/read-user-dto';
 
 export const User = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {

@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { SignInDto } from '../dto/sign-in.dto';
-import { UserService } from 'src/modules/user/service/user.service';
+import { UserService } from '../../../modules/user/service/user.service';
 import { KeycloakService } from '../api/auth';
 import { CreateAuthDto } from '../dto/create-auth.dto';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
-import { AccountEntity } from 'src/modules/account/entities/account.entity';
+import { UserEntity } from '../../../modules/user/entities/user.entity';
+import { AccountEntity } from '../../../modules/account/entities/account.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 

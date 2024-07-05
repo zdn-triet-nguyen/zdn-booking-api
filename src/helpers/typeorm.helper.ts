@@ -1,4 +1,4 @@
-import { Filtering } from 'src/decorators/filter.decorator';
+import { Filtering } from '../decorators/filter.decorator';
 import { ILike } from 'typeorm';
 
 export const getWhere = (filter: Filtering) => {

@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { BookingEntity } from 'src/modules/booking/entities/booking.entity';
-import { SportFieldEntity } from 'src/modules/sport-field/entities/sport-field.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { BookingEntity } from '../../../modules/booking/entities/booking.entity';
+import { SportFieldEntity } from '../../../modules/sport-field/entities/sport-field.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 @Entity('field')
 export class FieldEntity extends BaseEntity {

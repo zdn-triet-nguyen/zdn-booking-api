@@ -12,16 +12,16 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { API_BEARER_AUTH } from 'src/constants/constants';
+import { API_BEARER_AUTH } from '../../../constants/constants';
 import { FieldService } from './../services/field.service';
 
 // import { FieldEntity } from '../entities/field.entity';
 import { CreateFieldDto } from '../dto/create-field.dto';
 import { UpdateFieldDto } from '../dto/update-field.dto';
 import { ReadFieldDto } from '../dto/read-field.dto';
-import { BaseResponse } from 'src/common/response/base.response';
-import { User } from 'src/decorators/user.decorator';
-import { ReadUserDTO } from 'src/modules/user/dto/read-user-dto';
+import { BaseResponse } from '../../../common/response/base.response';
+import { User } from '../../../decorators/user.decorator';
+import { ReadUserDTO } from '../../../modules/user/dto/read-user-dto';
 
 @ApiTags('field')
 @ApiBearerAuth(API_BEARER_AUTH)

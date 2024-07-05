@@ -1,4 +1,4 @@
-import { LocationEntity } from 'src/modules/location/entities/location.entity';
+import { LocationEntity } from '../../../modules/location/entities/location.entity';
 import { SportFieldImageEntity } from '../entities/sport-field-image.entity';
 import { SportFieldTypeEntity } from '../entities/sport-field-type.entity';
 import { AutoMap } from '@automapper/classes';
